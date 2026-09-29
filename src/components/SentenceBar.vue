@@ -4,7 +4,6 @@ import { useSpeech } from '../composables/useSpeech'
 import { useSentenceStore } from '../stores/sentenceStore'
 import { useSettingsStore } from '../stores/settingsStore'
 import LargeTextDialog from './LargeTextDialog.vue'
-import PictogramImage from './PictogramImage.vue'
 
 const sentence = useSentenceStore()
 const settings = useSettingsStore()
@@ -54,7 +53,6 @@ function onSpeak() {
           class="sentence-bar__item"
           :style="{ '--word-color': `var(--color-${card.wordClass})` }"
         >
-          <PictogramImage :picto="card.picto" class="sentence-bar__picto" />
           {{ card.label }}
         </li>
       </ol>
@@ -142,23 +140,15 @@ function onSpeak() {
   list-style: none;
 }
 
-/* Pictograma acima do texto, com a faixa da classe no topo, como nos cards */
 .sentence-bar__item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: var(--space-1) var(--space-2);
+  padding: var(--space-1) var(--space-3);
   border: var(--border-width) solid var(--color-border);
-  border-top: var(--stripe-width) solid var(--word-color);
+  border-left: var(--stripe-width) solid var(--word-color);
   border-radius: var(--radius-small);
-  background: var(--color-surface);
-  font-size: calc(1.25rem * var(--font-scale));
+  background: var(--color-bg);
+  font-size: calc(1.375rem * var(--font-scale));
   font-weight: 600;
   line-height: 1.3;
-}
-
-.sentence-bar__picto {
-  width: 2.75rem;
 }
 
 .sentence-bar__placeholder {

@@ -39,6 +39,15 @@ let initialized = false
 // Guarda a fala atual: no Chrome, sem uma referência, a utterance pode ser
 // coletada pelo garbage collector e o evento `end` nunca dispara
 let currentUtterance: SpeechSynthesisUtterance | null = null
+let currentIsPreview = false
+
+// Volume relativo da varredura auditiva (nome do item destacado)
+const PREVIEW_VOLUME = 0.5
+
+export interface SpeakOptions {
+  // Varredura auditiva: fala mais baixo e nunca interrompe uma palavra ou frase em andamento
+  preview?: boolean
+}
 
 function loadVoices() {
   voices.value = window.speechSynthesis.getVoices()
@@ -56,11 +65,15 @@ export function useSpeech() {
   init()
   const settings = useSettingsStore()
 
-  function speak(text: string) {
+  function speak(text: string, options: SpeakOptions = {}) {
     const trimmed = text.trim()
     if (!isSupported || trimmed === '') return
 
     const synth = window.speechSynthesis
+    const preview = options.preview ?? false
+    const isTalking = currentUtterance !== null && (synth.speaking || synth.pending)
+    if (preview && isTalking && !currentIsPreview) return
+
     // Cancela a fala anterior para não enfileirar
     synth.cancel()
 
@@ -70,7 +83,7 @@ export function useSpeech() {
     if (voice) utterance.voice = voice
     utterance.rate = settings.rate
     utterance.pitch = settings.pitch
-    utterance.volume = settings.volume
+    utterance.volume = preview ? settings.volume * PREVIEW_VOLUME : settings.volume
 
     utterance.onstart = () => {
       isSpeaking.value = true
@@ -83,6 +96,7 @@ export function useSpeech() {
     }
 
     currentUtterance = utterance
+    currentIsPreview = preview
     synth.speak(utterance)
   }
 

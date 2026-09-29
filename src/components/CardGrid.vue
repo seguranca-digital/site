@@ -1,16 +1,55 @@
 <script setup lang="ts">
-import { computed, ref, useTemplateRef, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
 import type { Card } from '../types'
 import CommCard from './CommCard.vue'
 
 const props = defineProps<{
   cards: Card[]
-  // Número máximo de colunas; sem valor, entram quantas colunas couberem
+  // Número máximo de colunas; sem valor, até um card por coluna, se couber
   columns?: number
+  // Cada linha vira um grupo da varredura (grade principal)
+  scanRows?: boolean
 }>()
 const emit = defineEmits<{ select: [card: Card] }>()
 
-const listRef = useTemplateRef<HTMLUListElement>('list')
+const containerRef = useTemplateRef<HTMLDivElement>('container')
+const probeRef = useTemplateRef<HTMLSpanElement>('probe')
+
+// Colunas que cabem na largura atual sem o card ficar menor que --card-min-size.
+// O "probe" é um elemento invisível com essa largura, então vale qualquer valor CSS.
+const fittingColumns = ref<number | null>(null)
+
+function measure() {
+  const container = containerRef.value
+  const minWidth = probeRef.value?.offsetWidth ?? 0
+  if (!container || minWidth <= 0) return
+  // column-gap do container não afeta o layout dele; serve só para o navegador converter --gap em px
+  const gap = parseFloat(getComputedStyle(container).columnGap) || 0
+  fittingColumns.value = Math.max(1, Math.floor((container.clientWidth + gap) / (minWidth + gap)))
+}
+
+let observer: ResizeObserver | undefined
+onMounted(() => {
+  measure()
+  if (typeof ResizeObserver === 'undefined') return
+  observer = new ResizeObserver(measure)
+  if (containerRef.value) observer.observe(containerRef.value)
+  if (probeRef.value) observer.observe(probeRef.value)
+})
+onBeforeUnmount(() => observer?.disconnect())
+
+const columnCount = computed(() => {
+  const limit = props.columns ?? props.cards.length
+  return Math.max(1, Math.min(limit, fittingColumns.value ?? limit))
+})
+
+const rows = computed(() => {
+  const result: Card[][] = []
+  for (let i = 0; i < props.cards.length; i += columnCount.value) {
+    result.push(props.cards.slice(i, i + columnCount.value))
+  }
+  return result
+})
 
 // Roving tabindex: só um card por vez entra na ordem do Tab; as setas movem entre os cards
 const activeIndex = ref(0)
@@ -25,16 +64,7 @@ watch(
 )
 
 function cardButtons(): HTMLButtonElement[] {
-  return Array.from(listRef.value?.querySelectorAll<HTMLButtonElement>('.comm-card') ?? [])
-}
-
-// Lê do layout o número real de colunas: em telas estreitas a grade pode ter menos colunas que o configurado
-function currentColumns(): number {
-  if (!listRef.value) return 1
-  const tracks = getComputedStyle(listRef.value)
-    .gridTemplateColumns.split(' ')
-    .filter((track) => track !== '' && track !== '0px')
-  return Math.max(tracks.length, 1)
+  return Array.from(containerRef.value?.querySelectorAll<HTMLButtonElement>('.comm-card') ?? [])
 }
 
 function focusCard(index: number) {
@@ -47,11 +77,13 @@ function onFocusIn(event: FocusEvent) {
   if (index >= 0) activeIndex.value = index
 }
 
+// Teclado no padrão ARIA de grade: setas, Home/End na linha, Ctrl+Home/End na grade toda
 function onKeydown(event: KeyboardEvent) {
   const count = props.cards.length
   if (count === 0) return
   const current = tabbableIndex.value
-  const columns = currentColumns()
+  const columns = columnCount.value
+  const rowStart = current - (current % columns)
 
   let next: number
   switch (event.key) {
@@ -68,10 +100,10 @@ function onKeydown(event: KeyboardEvent) {
       next = current - columns >= 0 ? current - columns : current
       break
     case 'Home':
-      next = 0
+      next = event.ctrlKey ? 0 : rowStart
       break
     case 'End':
-      next = count - 1
+      next = event.ctrlKey ? count - 1 : Math.min(rowStart + columns, count) - 1
       break
     default:
       return
@@ -79,54 +111,81 @@ function onKeydown(event: KeyboardEvent) {
   event.preventDefault()
   focusCard(next)
 }
+
+// Atributos de grupo da varredura para a linha `index` (só na grade principal)
+function rowScanAttrs(index: number) {
+  if (!props.scanRows) return {}
+  const label = `Linha ${index + 1}`
+  return { 'data-scan-group': `linha-${index + 1}`, 'data-scan-label': label, tabindex: -1 }
+}
 </script>
 
 <template>
-  <ul
-    v-if="cards.length > 0"
-    ref="list"
-    class="card-grid"
-    :class="{ 'card-grid--fixed': columns }"
-    :style="columns ? { '--grid-columns': columns } : undefined"
-    role="list"
-    @keydown="onKeydown"
-    @focusin="onFocusIn"
-  >
-    <li v-for="(card, index) in cards" :key="card.id" class="card-grid__item">
-      <CommCard
-        :card="card"
-        :tabindex="index === tabbableIndex ? 0 : -1"
-        @select="emit('select', $event)"
-      />
-    </li>
-  </ul>
-  <p v-else class="card-grid__empty">Nenhum card nesta categoria.</p>
+  <div ref="container" class="card-grid">
+    <span ref="probe" class="card-grid__probe" aria-hidden="true" />
+    <div
+      v-if="cards.length > 0"
+      role="grid"
+      class="card-grid__grid"
+      :style="{ '--columns': columnCount }"
+      @keydown="onKeydown"
+      @focusin="onFocusIn"
+    >
+      <div
+        v-for="(row, rowIndex) in rows"
+        :key="rowIndex"
+        role="row"
+        class="card-grid__row"
+        v-bind="rowScanAttrs(rowIndex)"
+      >
+        <div
+          v-for="(card, columnIndex) in row"
+          :key="card.id"
+          role="gridcell"
+          class="card-grid__cell"
+        >
+          <CommCard
+            :card="card"
+            :tabindex="rowIndex * columnCount + columnIndex === tabbableIndex ? 0 : -1"
+            :data-scan-item="`card:${card.id}`"
+            @select="emit('select', $event)"
+          />
+        </div>
+      </div>
+    </div>
+    <p v-else class="card-grid__empty">Nenhum card nesta categoria.</p>
+  </div>
 </template>
 
 <style scoped>
 .card-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(var(--card-min-size), 1fr));
+  position: relative;
+  column-gap: var(--gap);
+}
+
+.card-grid__probe {
+  position: absolute;
+  width: var(--card-min-size);
+  height: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.card-grid__grid {
+  display: flex;
+  flex-direction: column;
   gap: var(--gap);
-  padding: 0;
-  list-style: none;
 }
 
-/* Até `--grid-columns` colunas; em telas estreitas, menos colunas para manter o tamanho mínimo do card */
-.card-grid--fixed {
-  grid-template-columns: repeat(
-    auto-fill,
-    minmax(
-      max(
-        var(--card-min-size),
-        calc((100% - (var(--grid-columns) - 1) * var(--gap)) / var(--grid-columns))
-      ),
-      1fr
-    )
-  );
+/* Todas as linhas usam o mesmo número de colunas, então os cards ficam alinhados */
+.card-grid__row {
+  display: grid;
+  grid-template-columns: repeat(var(--columns), minmax(0, 1fr));
+  gap: var(--gap);
+  border-radius: var(--radius);
 }
 
-.card-grid__item {
+.card-grid__cell {
   display: flex;
   min-width: 0;
 }

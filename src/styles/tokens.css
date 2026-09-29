@@ -11,7 +11,6 @@
   --color-primary: #0b5cad;
   --color-primary-hover: #094a8c;
   --color-primary-text: #ffffff;
-  --color-link: #0b5cad;
   --color-selected: #1a1a1a;
   --color-selected-text: #ffffff;
   --color-notice-bg: #fff4ce;
@@ -42,7 +41,6 @@
   --focus-width: 0.25rem;
   /* Acima dos 64 px mínimos da seção 6; largo o bastante para "professora" não quebrar no meio */
   --card-min-size: 5.5rem;
-  --picto-size: 6rem; /* tamanho máximo do pictograma no card */
   --gap: 0.5rem; /* espaçamento mínimo de 8 px entre alvos de toque */
   --font-scale: 1;
 
