@@ -23,7 +23,7 @@ function selectCard(card: Card) {
 
 <template>
   <div class="board">
-    <h1 class="visually-hidden">Comunicador Alternativo</h1>
+    <h1 class="visually-hidden" tabindex="-1">Comunicador Alternativo</h1>
 
     <p v-if="!isSupported" class="notice">
       Este navegador não tem suporte à fala. Use o botão <strong>Mostrar frase</strong> para exibir

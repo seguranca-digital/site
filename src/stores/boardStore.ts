@@ -1,11 +1,24 @@
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 import type { Board, Card } from '../types'
+import pictogramasMap from '../data/pictogramas-map.json'
 import vocabularioInicial from '../data/vocabulario-inicial.json'
+
+// Associa os pictogramas baixados pelo script (`npm run pictogramas`) aos cards e
+// categorias que ainda não têm imagem definida no vocabulário
+function applyPictogramMap(board: Board, map: Record<string, number>): Board {
+  for (const item of [...Object.values(board.cards), ...board.categories]) {
+    const pictogramId = map[item.id]
+    if (item.picto.kind === 'none' && pictogramId !== undefined) {
+      item.picto = { kind: 'arasaac', id: pictogramId }
+    }
+  }
+  return board
+}
 
 // Cópia profunda do vocabulário inicial, para que alterações na prancha não modifiquem o JSON importado
 export function createInitialBoard(): Board {
-  return structuredClone(vocabularioInicial) as Board
+  return applyPictogramMap(structuredClone(vocabularioInicial) as Board, pictogramasMap)
 }
 
 export const useBoardStore = defineStore('board', () => {

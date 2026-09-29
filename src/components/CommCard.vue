@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { Card } from '../types'
+import PictogramImage from './PictogramImage.vue'
 
 defineProps<{ card: Card }>()
 defineEmits<{ select: [card: Card] }>()
@@ -12,6 +13,7 @@ defineEmits<{ select: [card: Card] }>()
     :style="{ '--word-color': `var(--color-${card.wordClass})` }"
     @click="$emit('select', card)"
   >
+    <PictogramImage :picto="card.picto" class="comm-card__picto" />
     <span class="comm-card__label">{{ card.label }}</span>
   </button>
 </template>
@@ -21,8 +23,8 @@ defineEmits<{ select: [card: Card] }>()
   display: flex;
   flex: 1;
   flex-direction: column;
+  gap: var(--space-1);
   align-items: center;
-  justify-content: center;
   min-width: 0;
   min-height: var(--card-min-size);
   padding: var(--space-2) 0.125rem;
@@ -44,6 +46,18 @@ defineEmits<{ select: [card: Card] }>()
   -webkit-user-select: none;
   -webkit-touch-callout: none;
   transition: transform 80ms ease-out;
+}
+
+/* Pictogramas alinhados no topo de cada linha da grade */
+.comm-card__picto {
+  width: min(100%, var(--picto-size));
+}
+
+/* O texto ocupa o espaço restante e fica centralizado nele (ou no card inteiro, sem imagem) */
+.comm-card__label {
+  display: flex;
+  flex: 1;
+  align-items: center;
 }
 
 .comm-card:hover {

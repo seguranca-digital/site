@@ -271,11 +271,11 @@ export interface Settings {
     
 - **Tela "Sobre" (`AboutView`)** com os créditos obrigatórios (texto exato na seção 9\) e um rodapé curto com link para essa tela.  
     
-- [ ] Script de download funcionando e idempotente  
+- [x] Script de download funcionando e idempotente  
         
-- [ ] Pictogramas exibidos nos cards e nas categorias  
+- [x] Pictogramas exibidos nos cards e nas categorias  
         
-- [ ] Tela Sobre com créditos ARASAAC
+- [x] Tela Sobre com créditos ARASAAC
 
 ---
 

@@ -40,6 +40,11 @@ button {
   outline-offset: 0.125rem;
 }
 
+/* Títulos recebem foco só por script, ao trocar de tela; não precisam de contorno */
+h1[tabindex='-1']:focus {
+  outline: none;
+}
+
 .visually-hidden {
   position: absolute !important;
   width: 1px !important;

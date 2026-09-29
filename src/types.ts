@@ -23,6 +23,8 @@ export interface Card {
 export interface Category {
   id: string;
   name: string;
+  searchTerm?: string; // termo de busca no ARASAAC, se diferente do nome
+  arasaacId?: number; // força um pictograma específico (sobrepõe a busca)
   picto: PictogramSource;
   cardIds: string[];
 }
