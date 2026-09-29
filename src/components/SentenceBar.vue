@@ -4,6 +4,7 @@ import { useSpeech } from '../composables/useSpeech'
 import { useSentenceStore } from '../stores/sentenceStore'
 import { useSettingsStore } from '../stores/settingsStore'
 import LargeTextDialog from './LargeTextDialog.vue'
+import PictogramImage from './PictogramImage.vue'
 
 const sentence = useSentenceStore()
 const settings = useSettingsStore()
@@ -53,17 +54,25 @@ function onSpeak() {
           class="sentence-bar__item"
           :style="{ '--word-color': `var(--color-${card.wordClass})` }"
         >
+          <PictogramImage :picto="card.picto" class="sentence-bar__picto" />
           {{ card.label }}
         </li>
       </ol>
       <p v-else class="sentence-bar__placeholder">Toque nos cards para montar uma frase.</p>
     </div>
 
-    <div class="sentence-bar__actions">
+    <div
+      class="sentence-bar__actions"
+      role="group"
+      aria-label="Ações da frase"
+      data-scan-group="acoes-frase"
+      tabindex="-1"
+    >
       <button
         ref="speakButton"
         type="button"
         class="btn btn--primary sentence-bar__speak"
+        data-scan-item="falar"
         @click="onSpeak"
       >
         <svg class="btn__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
@@ -78,7 +87,12 @@ function onSpeak() {
         </svg>
         {{ isSupported ? 'Falar' : 'Mostrar frase' }}
       </button>
-      <button type="button" class="btn sentence-bar__secondary" @click="sentence.removeLast()">
+      <button
+        type="button"
+        class="btn sentence-bar__secondary"
+        data-scan-item="apagar-ultimo"
+        @click="sentence.removeLast()"
+      >
         <svg class="btn__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
           <path
             d="M9 5h11a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H9l-6-7zM12 9l6 6M18 9l-6 6"
@@ -91,7 +105,12 @@ function onSpeak() {
         </svg>
         Apagar último
       </button>
-      <button type="button" class="btn sentence-bar__secondary" @click="sentence.clear()">
+      <button
+        type="button"
+        class="btn sentence-bar__secondary"
+        data-scan-item="limpar"
+        @click="sentence.clear()"
+      >
         <svg class="btn__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
           <path
             d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"
@@ -140,15 +159,23 @@ function onSpeak() {
   list-style: none;
 }
 
+/* Pictograma acima do texto, com a faixa da classe no topo, como nos cards */
 .sentence-bar__item {
-  padding: var(--space-1) var(--space-3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--space-1) var(--space-2);
   border: var(--border-width) solid var(--color-border);
-  border-left: var(--stripe-width) solid var(--word-color);
+  border-top: var(--stripe-width) solid var(--word-color);
   border-radius: var(--radius-small);
-  background: var(--color-bg);
-  font-size: calc(1.375rem * var(--font-scale));
+  background: var(--color-surface);
+  font-size: calc(1.25rem * var(--font-scale));
   font-weight: 600;
   line-height: 1.3;
+}
+
+.sentence-bar__picto {
+  width: 2.75rem;
 }
 
 .sentence-bar__placeholder {

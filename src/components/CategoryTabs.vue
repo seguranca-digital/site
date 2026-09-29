@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useTemplateRef } from 'vue'
 import type { Category } from '../types'
+import PictogramImage from './PictogramImage.vue'
 
 const props = defineProps<{
   categories: Category[]
@@ -57,6 +58,8 @@ function onKeydown(event: KeyboardEvent) {
       role="tablist"
       aria-label="Categorias"
       class="category-tabs__list"
+      data-scan-group="categorias"
+      tabindex="-1"
       @keydown="onKeydown"
     >
       <button
@@ -69,8 +72,10 @@ function onKeydown(event: KeyboardEvent) {
         :aria-selected="category.id === activeId"
         :aria-controls="panelId"
         :tabindex="category.id === activeId ? 0 : -1"
+        :data-scan-item="`aba:${category.id}`"
         @click="emit('select', category.id)"
       >
+        <PictogramImage :picto="category.picto" class="category-tabs__picto" />
         {{ category.name }}
       </button>
     </div>
@@ -100,8 +105,11 @@ function onKeydown(event: KeyboardEvent) {
 }
 
 .category-tabs__tab {
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
   min-height: 4rem;
-  padding: var(--space-2) var(--space-4);
+  padding: var(--space-1) var(--space-4) var(--space-1) var(--space-2);
   border: var(--border-width) solid var(--color-border);
   border-radius: var(--radius);
   background: var(--color-surface);
@@ -109,6 +117,13 @@ function onKeydown(event: KeyboardEvent) {
   font-size: calc(1.125rem * var(--font-scale));
   font-weight: 500;
   line-height: 1.2;
+}
+
+/* Fundo branco atrás do pictograma, para ele continuar legível na aba ativa (fundo escuro) */
+.category-tabs__picto {
+  width: 2.75rem;
+  border-radius: var(--radius-small);
+  background: var(--color-surface);
 }
 
 .category-tabs__tab:hover {

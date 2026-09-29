@@ -40,6 +40,48 @@ button {
   outline-offset: 0.125rem;
 }
 
+/* Títulos e grupos da varredura recebem foco só por script; não precisam do contorno comum */
+h1[tabindex='-1']:focus,
+[data-scan-group]:focus {
+  outline: none;
+}
+
+/* Varredura: destaque do grupo ou item atual — contorno de 6 px com halo amarelo */
+[data-scan-highlight] {
+  position: relative;
+  z-index: 1;
+  outline: 0.375rem solid var(--color-scan) !important;
+  outline-offset: 0.125rem !important;
+  box-shadow: 0 0 0 0.875rem var(--color-scan-halo);
+  transition: transform 120ms ease-out;
+}
+
+[data-scan-highlight='grupo'] {
+  transform: scale(1.01);
+}
+
+[data-scan-highlight='item'] {
+  transform: scale(1.05);
+}
+
+/* Ao rolar até o elemento focado, deixa espaço para a barra inferior da varredura */
+html:has([data-scan-root].board--scanning) {
+  scroll-padding-bottom: calc(var(--scan-bar-height) + var(--space-6));
+}
+
+/* Grupo aberto no nível 2: contorno tracejado, para dar contexto */
+[data-scan-open] {
+  outline: 0.25rem dashed var(--color-scan);
+  outline-offset: 0.375rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-scan-highlight] {
+    transform: none !important;
+    transition: none;
+  }
+}
+
 .visually-hidden {
   position: absolute !important;
   width: 1px !important;
