@@ -15,8 +15,9 @@ const emit = defineEmits<{ select: [card: Card] }>()
 
 <style scoped>
 .quick-phrases {
-  /* Rótulos curtos: cabem 4 por linha em celulares */
+  /* Rótulos curtos: cabem 4 por linha em celulares; pictogramas menores para a linha ocupar pouca altura */
   --card-min-size: 4.5rem;
+  --picto-size: 3rem;
   padding: var(--space-2);
   border-radius: var(--radius);
   background: var(--color-surface-alt);

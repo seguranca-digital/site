@@ -17,6 +17,7 @@
     {
       "id": "comida-e-bebida",
       "name": "Comida e bebida",
+      "arasaacId": 4610,
       "picto": { "kind": "none" },
       "cardIds": ["agua", "suco", "leite", "cafe", "pao", "fruta", "biscoito", "arroz-e-feijao", "sorvete"]
     },
@@ -29,12 +30,14 @@
     {
       "id": "lugares",
       "name": "Lugares",
+      "arasaacId": 32598,
       "picto": { "kind": "none" },
       "cardIds": ["casa", "escola", "banheiro", "quarto", "parque", "hospital", "rua"]
     },
     {
       "id": "social",
       "name": "Social",
+      "arasaacId": 4740,
       "picto": { "kind": "none" },
       "cardIds": ["oi", "tchau", "por-favor", "obrigado", "desculpa", "tudo-bem"]
     },
@@ -74,7 +77,7 @@
     "ver": { "id": "ver", "label": "ver", "picto": { "kind": "none" }, "wordClass": "acao" },
     "ouvir-musica": { "id": "ouvir-musica", "label": "ouvir música", "picto": { "kind": "none" }, "wordClass": "acao" },
     "ajudar": { "id": "ajudar", "label": "ajudar", "picto": { "kind": "none" }, "wordClass": "acao" },
-    "ir-embora": { "id": "ir-embora", "label": "ir embora", "picto": { "kind": "none" }, "wordClass": "acao" },
+    "ir-embora": { "id": "ir-embora", "label": "ir embora", "arasaacId": 2806, "picto": { "kind": "none" }, "wordClass": "acao" },
     "nao-quero": { "id": "nao-quero", "label": "não quero", "picto": { "kind": "none" }, "wordClass": "negacao" },
     "nao-gosto": { "id": "nao-gosto", "label": "não gosto", "picto": { "kind": "none" }, "wordClass": "negacao" },
 
@@ -83,10 +86,10 @@
     "leite": { "id": "leite", "label": "leite", "picto": { "kind": "none" }, "wordClass": "coisa" },
     "cafe": { "id": "cafe", "label": "café", "picto": { "kind": "none" }, "wordClass": "coisa" },
     "pao": { "id": "pao", "label": "pão", "picto": { "kind": "none" }, "wordClass": "coisa" },
-    "fruta": { "id": "fruta", "label": "fruta", "picto": { "kind": "none" }, "wordClass": "coisa" },
-    "biscoito": { "id": "biscoito", "label": "biscoito", "picto": { "kind": "none" }, "wordClass": "coisa" },
+    "fruta": { "id": "fruta", "label": "fruta", "arasaacId": 28339, "picto": { "kind": "none" }, "wordClass": "coisa" },
+    "biscoito": { "id": "biscoito", "label": "biscoito", "arasaacId": 3331, "picto": { "kind": "none" }, "wordClass": "coisa" },
     "arroz-e-feijao": { "id": "arroz-e-feijao", "label": "arroz e feijão", "picto": { "kind": "none" }, "wordClass": "coisa" },
-    "sorvete": { "id": "sorvete", "label": "sorvete", "picto": { "kind": "none" }, "wordClass": "coisa" },
+    "sorvete": { "id": "sorvete", "label": "sorvete", "arasaacId": 2420, "picto": { "kind": "none" }, "wordClass": "coisa" },
 
     "feliz": { "id": "feliz", "label": "feliz", "picto": { "kind": "none" }, "wordClass": "descricao" },
     "triste": { "id": "triste", "label": "triste", "picto": { "kind": "none" }, "wordClass": "descricao" },
@@ -96,17 +99,17 @@
     "com-fome": { "id": "com-fome", "label": "com fome", "picto": { "kind": "none" }, "wordClass": "descricao" },
     "com-sede": { "id": "com-sede", "label": "com sede", "picto": { "kind": "none" }, "wordClass": "descricao" },
     "com-frio": { "id": "com-frio", "label": "com frio", "picto": { "kind": "none" }, "wordClass": "descricao" },
-    "com-calor": { "id": "com-calor", "label": "com calor", "picto": { "kind": "none" }, "wordClass": "descricao" },
+    "com-calor": { "id": "com-calor", "label": "com calor", "arasaacId": 35561, "picto": { "kind": "none" }, "wordClass": "descricao" },
 
     "casa": { "id": "casa", "label": "casa", "picto": { "kind": "none" }, "wordClass": "coisa" },
     "escola": { "id": "escola", "label": "escola", "picto": { "kind": "none" }, "wordClass": "coisa" },
     "banheiro": { "id": "banheiro", "label": "banheiro", "picto": { "kind": "none" }, "wordClass": "coisa" },
     "quarto": { "id": "quarto", "label": "quarto", "picto": { "kind": "none" }, "wordClass": "coisa" },
-    "parque": { "id": "parque", "label": "parque", "picto": { "kind": "none" }, "wordClass": "coisa" },
-    "hospital": { "id": "hospital", "label": "hospital", "picto": { "kind": "none" }, "wordClass": "coisa" },
+    "parque": { "id": "parque", "label": "parque", "arasaacId": 2859, "picto": { "kind": "none" }, "wordClass": "coisa" },
+    "hospital": { "id": "hospital", "label": "hospital", "arasaacId": 6523, "picto": { "kind": "none" }, "wordClass": "coisa" },
     "rua": { "id": "rua", "label": "rua", "picto": { "kind": "none" }, "wordClass": "coisa" },
 
-    "oi": { "id": "oi", "label": "oi", "picto": { "kind": "none" }, "wordClass": "social" },
+    "oi": { "id": "oi", "label": "oi", "arasaacId": 6522, "picto": { "kind": "none" }, "wordClass": "social" },
     "tchau": { "id": "tchau", "label": "tchau", "picto": { "kind": "none" }, "wordClass": "social" },
     "por-favor": { "id": "por-favor", "label": "por favor", "picto": { "kind": "none" }, "wordClass": "social" },
     "obrigado": { "id": "obrigado", "label": "obrigado", "picto": { "kind": "none" }, "wordClass": "social" },

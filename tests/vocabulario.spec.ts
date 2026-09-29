@@ -38,6 +38,13 @@ describe('vocabulario-inicial.json', () => {
     expect(new Set(ids).size).toBe(ids.length)
   })
 
+  // Cards e categorias dividem o mesmo pictogramas-map.json
+  it('ids de categoria não coincidem com ids de card', () => {
+    for (const category of board.categories) {
+      expect(board.cards[category.id], category.id).toBeUndefined()
+    }
+  })
+
   it('"não quero" e "não gosto" ficam em Ações, com a classe negacao', () => {
     const acoes = board.categories.find((category) => category.id === 'acoes')
     expect(acoes?.cardIds).toContain('nao-quero')
