@@ -1,0 +1,122 @@
+{
+  "version": 1,
+  "quickPhraseIds": ["fr-sim", "fr-nao", "fr-ajuda", "fr-parar", "fr-mais", "fr-banheiro", "fr-dor"],
+  "categories": [
+    {
+      "id": "pessoas",
+      "name": "Pessoas",
+      "picto": { "kind": "none" },
+      "cardIds": ["eu", "voce", "mae", "pai", "irmao", "irma", "professor", "professora", "amigo", "amiga"]
+    },
+    {
+      "id": "acoes",
+      "name": "Ações",
+      "picto": { "kind": "none" },
+      "cardIds": ["quero", "comer", "beber", "ir", "brincar", "dormir", "ver", "ouvir-musica", "ajudar", "ir-embora", "nao-quero", "nao-gosto"]
+    },
+    {
+      "id": "comida-e-bebida",
+      "name": "Comida e bebida",
+      "picto": { "kind": "none" },
+      "cardIds": ["agua", "suco", "leite", "cafe", "pao", "fruta", "biscoito", "arroz-e-feijao", "sorvete"]
+    },
+    {
+      "id": "sentimentos",
+      "name": "Sentimentos",
+      "picto": { "kind": "none" },
+      "cardIds": ["feliz", "triste", "bravo", "cansado", "com-medo", "com-fome", "com-sede", "com-frio", "com-calor"]
+    },
+    {
+      "id": "lugares",
+      "name": "Lugares",
+      "picto": { "kind": "none" },
+      "cardIds": ["casa", "escola", "banheiro", "quarto", "parque", "hospital", "rua"]
+    },
+    {
+      "id": "social",
+      "name": "Social",
+      "picto": { "kind": "none" },
+      "cardIds": ["oi", "tchau", "por-favor", "obrigado", "desculpa", "tudo-bem"]
+    },
+    {
+      "id": "perguntas",
+      "name": "Perguntas",
+      "picto": { "kind": "none" },
+      "cardIds": ["o-que", "onde", "quando", "quem", "por-que"]
+    }
+  ],
+  "cards": {
+    "fr-sim": { "id": "fr-sim", "label": "Sim", "speech": "sim", "picto": { "kind": "none" }, "wordClass": "social" },
+    "fr-nao": { "id": "fr-nao", "label": "Não", "speech": "não", "picto": { "kind": "none" }, "wordClass": "negacao" },
+    "fr-ajuda": { "id": "fr-ajuda", "label": "Ajuda", "speech": "preciso de ajuda", "picto": { "kind": "none" }, "wordClass": "social" },
+    "fr-parar": { "id": "fr-parar", "label": "Parar", "speech": "para, por favor", "picto": { "kind": "none" }, "wordClass": "negacao" },
+    "fr-mais": { "id": "fr-mais", "label": "Mais", "speech": "mais", "picto": { "kind": "none" }, "wordClass": "outro" },
+    "fr-banheiro": { "id": "fr-banheiro", "label": "Banheiro", "speech": "preciso ir ao banheiro", "picto": { "kind": "none" }, "wordClass": "coisa" },
+    "fr-dor": { "id": "fr-dor", "label": "Dor", "speech": "estou com dor", "picto": { "kind": "none" }, "wordClass": "descricao" },
+
+    "eu": { "id": "eu", "label": "eu", "picto": { "kind": "none" }, "wordClass": "pessoa" },
+    "voce": { "id": "voce", "label": "você", "picto": { "kind": "none" }, "wordClass": "pessoa" },
+    "mae": { "id": "mae", "label": "mãe", "picto": { "kind": "none" }, "wordClass": "pessoa" },
+    "pai": { "id": "pai", "label": "pai", "picto": { "kind": "none" }, "wordClass": "pessoa" },
+    "irmao": { "id": "irmao", "label": "irmão", "picto": { "kind": "none" }, "wordClass": "pessoa" },
+    "irma": { "id": "irma", "label": "irmã", "picto": { "kind": "none" }, "wordClass": "pessoa" },
+    "professor": { "id": "professor", "label": "professor", "picto": { "kind": "none" }, "wordClass": "pessoa" },
+    "professora": { "id": "professora", "label": "professora", "picto": { "kind": "none" }, "wordClass": "pessoa" },
+    "amigo": { "id": "amigo", "label": "amigo", "picto": { "kind": "none" }, "wordClass": "pessoa" },
+    "amiga": { "id": "amiga", "label": "amiga", "picto": { "kind": "none" }, "wordClass": "pessoa" },
+
+    "quero": { "id": "quero", "label": "quero", "picto": { "kind": "none" }, "wordClass": "acao" },
+    "comer": { "id": "comer", "label": "comer", "picto": { "kind": "none" }, "wordClass": "acao" },
+    "beber": { "id": "beber", "label": "beber", "picto": { "kind": "none" }, "wordClass": "acao" },
+    "ir": { "id": "ir", "label": "ir", "picto": { "kind": "none" }, "wordClass": "acao" },
+    "brincar": { "id": "brincar", "label": "brincar", "picto": { "kind": "none" }, "wordClass": "acao" },
+    "dormir": { "id": "dormir", "label": "dormir", "picto": { "kind": "none" }, "wordClass": "acao" },
+    "ver": { "id": "ver", "label": "ver", "picto": { "kind": "none" }, "wordClass": "acao" },
+    "ouvir-musica": { "id": "ouvir-musica", "label": "ouvir música", "picto": { "kind": "none" }, "wordClass": "acao" },
+    "ajudar": { "id": "ajudar", "label": "ajudar", "picto": { "kind": "none" }, "wordClass": "acao" },
+    "ir-embora": { "id": "ir-embora", "label": "ir embora", "picto": { "kind": "none" }, "wordClass": "acao" },
+    "nao-quero": { "id": "nao-quero", "label": "não quero", "picto": { "kind": "none" }, "wordClass": "negacao" },
+    "nao-gosto": { "id": "nao-gosto", "label": "não gosto", "picto": { "kind": "none" }, "wordClass": "negacao" },
+
+    "agua": { "id": "agua", "label": "água", "picto": { "kind": "none" }, "wordClass": "coisa" },
+    "suco": { "id": "suco", "label": "suco", "picto": { "kind": "none" }, "wordClass": "coisa" },
+    "leite": { "id": "leite", "label": "leite", "picto": { "kind": "none" }, "wordClass": "coisa" },
+    "cafe": { "id": "cafe", "label": "café", "picto": { "kind": "none" }, "wordClass": "coisa" },
+    "pao": { "id": "pao", "label": "pão", "picto": { "kind": "none" }, "wordClass": "coisa" },
+    "fruta": { "id": "fruta", "label": "fruta", "picto": { "kind": "none" }, "wordClass": "coisa" },
+    "biscoito": { "id": "biscoito", "label": "biscoito", "picto": { "kind": "none" }, "wordClass": "coisa" },
+    "arroz-e-feijao": { "id": "arroz-e-feijao", "label": "arroz e feijão", "picto": { "kind": "none" }, "wordClass": "coisa" },
+    "sorvete": { "id": "sorvete", "label": "sorvete", "picto": { "kind": "none" }, "wordClass": "coisa" },
+
+    "feliz": { "id": "feliz", "label": "feliz", "picto": { "kind": "none" }, "wordClass": "descricao" },
+    "triste": { "id": "triste", "label": "triste", "picto": { "kind": "none" }, "wordClass": "descricao" },
+    "bravo": { "id": "bravo", "label": "bravo", "picto": { "kind": "none" }, "wordClass": "descricao" },
+    "cansado": { "id": "cansado", "label": "cansado", "picto": { "kind": "none" }, "wordClass": "descricao" },
+    "com-medo": { "id": "com-medo", "label": "com medo", "picto": { "kind": "none" }, "wordClass": "descricao" },
+    "com-fome": { "id": "com-fome", "label": "com fome", "picto": { "kind": "none" }, "wordClass": "descricao" },
+    "com-sede": { "id": "com-sede", "label": "com sede", "picto": { "kind": "none" }, "wordClass": "descricao" },
+    "com-frio": { "id": "com-frio", "label": "com frio", "picto": { "kind": "none" }, "wordClass": "descricao" },
+    "com-calor": { "id": "com-calor", "label": "com calor", "picto": { "kind": "none" }, "wordClass": "descricao" },
+
+    "casa": { "id": "casa", "label": "casa", "picto": { "kind": "none" }, "wordClass": "coisa" },
+    "escola": { "id": "escola", "label": "escola", "picto": { "kind": "none" }, "wordClass": "coisa" },
+    "banheiro": { "id": "banheiro", "label": "banheiro", "picto": { "kind": "none" }, "wordClass": "coisa" },
+    "quarto": { "id": "quarto", "label": "quarto", "picto": { "kind": "none" }, "wordClass": "coisa" },
+    "parque": { "id": "parque", "label": "parque", "picto": { "kind": "none" }, "wordClass": "coisa" },
+    "hospital": { "id": "hospital", "label": "hospital", "picto": { "kind": "none" }, "wordClass": "coisa" },
+    "rua": { "id": "rua", "label": "rua", "picto": { "kind": "none" }, "wordClass": "coisa" },
+
+    "oi": { "id": "oi", "label": "oi", "picto": { "kind": "none" }, "wordClass": "social" },
+    "tchau": { "id": "tchau", "label": "tchau", "picto": { "kind": "none" }, "wordClass": "social" },
+    "por-favor": { "id": "por-favor", "label": "por favor", "picto": { "kind": "none" }, "wordClass": "social" },
+    "obrigado": { "id": "obrigado", "label": "obrigado", "picto": { "kind": "none" }, "wordClass": "social" },
+    "desculpa": { "id": "desculpa", "label": "desculpa", "picto": { "kind": "none" }, "wordClass": "social" },
+    "tudo-bem": { "id": "tudo-bem", "label": "tudo bem?", "picto": { "kind": "none" }, "wordClass": "social" },
+
+    "o-que": { "id": "o-que", "label": "o quê?", "picto": { "kind": "none" }, "wordClass": "pergunta" },
+    "onde": { "id": "onde", "label": "onde?", "picto": { "kind": "none" }, "wordClass": "pergunta" },
+    "quando": { "id": "quando", "label": "quando?", "picto": { "kind": "none" }, "wordClass": "pergunta" },
+    "quem": { "id": "quem", "label": "quem?", "picto": { "kind": "none" }, "wordClass": "pergunta" },
+    "por-que": { "id": "por-que", "label": "por quê?", "picto": { "kind": "none" }, "wordClass": "pergunta" }
+  }
+}
