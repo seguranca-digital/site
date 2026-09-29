@@ -11,10 +11,16 @@
   --color-primary: #0b5cad;
   --color-primary-hover: #094a8c;
   --color-primary-text: #ffffff;
+  --color-link: #0b5cad;
   --color-selected: #1a1a1a;
   --color-selected-text: #ffffff;
   --color-notice-bg: #fff4ce;
   --color-notice-border: #8a6d00;
+
+  /* Varredura: contorno escuro com halo amarelo, visível sobre fundo claro ou escuro */
+  --color-scan: #1a1a1a;
+  --color-scan-text: #ffffff;
+  --color-scan-halo: #ffd400;
 
   /* Chave de Fitzgerald adaptada: a cor é complementar (faixa), nunca a única informação */
   --color-pessoa: #f2c200;
@@ -41,8 +47,10 @@
   --focus-width: 0.25rem;
   /* Acima dos 64 px mínimos da seção 6; largo o bastante para "professora" não quebrar no meio */
   --card-min-size: 5.5rem;
+  --picto-size: 6rem; /* tamanho máximo do pictograma no card */
   --gap: 0.5rem; /* espaçamento mínimo de 8 px entre alvos de toque */
   --font-scale: 1;
+  --scan-bar-height: 5rem; /* barra inferior da varredura */
 
   --font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Noto Sans', Arial, sans-serif;
 }
