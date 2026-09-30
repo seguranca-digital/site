@@ -119,11 +119,9 @@ function onKeydown(event: KeyboardEvent) {
   line-height: 1.2;
 }
 
-/* Fundo branco atrás do pictograma, para ele continuar legível na aba ativa (fundo escuro) */
+/* O pictograma tem fundo claro próprio, então continua legível na aba ativa (fundo escuro) */
 .category-tabs__picto {
   width: 2.75rem;
-  border-radius: var(--radius-small);
-  background: var(--color-surface);
 }
 
 .category-tabs__tab:hover {

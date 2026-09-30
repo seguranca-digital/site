@@ -63,7 +63,8 @@ watch(
         </svg>
         Varredura
       </button>
-      <!-- Entrada protegida: segurar 2 s, para o usuário principal não abrir o editor sem querer -->
+      <!-- Entradas protegidas: segurar 2 s, para o usuário principal não abrir o editor nem as
+           configurações sem querer -->
       <HoldButton class="board__tool" @complete="router.push('/editor')">
         <svg class="btn__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
           <circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="2" />
@@ -77,6 +78,21 @@ watch(
           <circle cx="12" cy="12" r="7" fill="none" stroke="currentColor" stroke-width="2" />
         </svg>
         Editar prancha
+      </HoldButton>
+      <HoldButton class="board__tool" @complete="router.push('/configuracoes')">
+        <svg class="btn__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path
+            d="M4 6h16M4 12h16M4 18h16"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+          />
+          <circle cx="9" cy="6" r="2.75" fill="currentColor" />
+          <circle cx="15" cy="12" r="2.75" fill="currentColor" />
+          <circle cx="7" cy="18" r="2.75" fill="currentColor" />
+        </svg>
+        Configurações
       </HoldButton>
     </div>
 
@@ -131,7 +147,8 @@ watch(
 
 .board__tool {
   min-height: 2.75rem;
-  padding: var(--space-1) var(--space-3);
+  /* Espaçamento lateral pequeno: em celulares de 320 px, dois botões cabem por linha */
+  padding: var(--space-1) var(--space-2);
 }
 
 .board__tool[aria-pressed='true'] {

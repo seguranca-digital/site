@@ -271,11 +271,11 @@ export interface Settings {
     
 - **Tela "Sobre" (`AboutView`)** com os créditos obrigatórios (texto exato na seção 9\) e um rodapé curto com link para essa tela.  
     
-- [ ] Script de download funcionando e idempotente  
+- [x] Script de download funcionando e idempotente  
         
-- [ ] Pictogramas exibidos nos cards e nas categorias  
+- [x] Pictogramas exibidos nos cards e nas categorias  
         
-- [ ] Tela Sobre com créditos ARASAAC
+- [x] Tela Sobre com créditos ARASAAC
 
 ---
 
@@ -309,11 +309,11 @@ export interface Settings {
 
 **Critério de aceite:** com a varredura ativa, usando **só a barra de espaço**, montar e falar "eu quero água".
 
-- [ ] Máquina de estados \+ testes com timers falsos  
-- [ ] Integração com a tela principal  
-- [ ] Acionador por teclado e toque em tela inteira, com tempo de aceitação  
-- [ ] Modo dois botões  
-- [ ] Varredura auditiva
+- [x] Máquina de estados \+ testes com timers falsos  
+- [x] Integração com a tela principal  
+- [x] Acionador por teclado e toque em tela inteira, com tempo de aceitação  
+- [x] Modo dois botões  
+- [x] Varredura auditiva
 
 ---
 
@@ -370,11 +370,11 @@ Tela `SettingsView`, protegida da mesma forma que o editor:
     
 - Tudo persistido e aplicado na hora.  
     
-- [ ] Tela de configurações completa  
+- [x] Tela de configurações completa  
         
-- [ ] Temas via `[data-theme]` e tokens CSS  
+- [x] Temas via `[data-theme]` e tokens CSS  
         
-- [ ] Revisão de acessibilidade de todas as telas (checklist da seção 6\)
+- [x] Revisão de acessibilidade de todas as telas (checklist da seção 6\)
 
 ---
 

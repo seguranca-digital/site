@@ -3,6 +3,7 @@ import { mount, type VueWrapper } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import { nextTick } from 'vue'
 import { createMemoryHistory, createRouter } from 'vue-router'
+import { useBoardStore } from '../src/stores/boardStore'
 import { useSettingsStore } from '../src/stores/settingsStore'
 import BoardView from '../src/views/BoardView.vue'
 
@@ -12,6 +13,7 @@ function createTestRouter() {
     routes: [
       { path: '/', component: BoardView },
       { path: '/editor', component: { render: () => null } },
+      { path: '/configuracoes', component: { render: () => null } },
     ],
   })
 }
@@ -115,6 +117,21 @@ describe('BoardView', () => {
     expect(selected.map((tab) => tab.text())).toEqual(['Lugares'])
     expect(wrapper.find('[role="tabpanel"]').attributes('aria-labelledby')).toBe('aba-lugares')
   })
+
+  it('com os rótulos ocultos, o card mostra só o pictograma, mas continua com o nome', async () => {
+    useSettingsStore().showLabels = false
+    await nextTick()
+    const card = findButton(wrapper, 'eu')
+    expect(card.find('.comm-card__label').classes()).toContain('visually-hidden')
+  })
+
+  it('card sem imagem mostra o texto mesmo com os rótulos ocultos', async () => {
+    useSettingsStore().showLabels = false
+    useBoardStore().board.cards['eu']!.picto = { kind: 'none' }
+    await nextTick()
+    const card = findButton(wrapper, 'eu')
+    expect(card.find('.comm-card__label').classes()).not.toContain('visually-hidden')
+  })
 })
 
 describe('Entrada protegida do editor', () => {
@@ -125,11 +142,11 @@ describe('Entrada protegida do editor', () => {
     vi.useRealTimers()
   })
 
-  async function setup() {
+  async function setup(label = 'Editar prancha') {
     const router = createTestRouter()
     await router.push('/')
     const wrapper = mount(BoardView, { global: { plugins: [createPinia(), router] } })
-    const gear = wrapper.findAll('button').find((button) => button.text().startsWith('Editar prancha'))!
+    const gear = wrapper.findAll('button').find((button) => button.text().startsWith(label))!
     return { router, gear }
   }
 
@@ -148,6 +165,20 @@ describe('Entrada protegida do editor', () => {
     vi.advanceTimersByTime(5000)
     await nextTick()
     expect(router.currentRoute.value.path).toBe('/')
+  })
+
+  it('segurar "Configurações" por 2 s abre as configurações; toque rápido não', async () => {
+    const { router, gear } = await setup('Configurações')
+    gear.element.dispatchEvent(new MouseEvent('pointerdown', { bubbles: true }))
+    vi.advanceTimersByTime(500)
+    gear.element.dispatchEvent(new MouseEvent('pointerup', { bubbles: true }))
+    vi.advanceTimersByTime(3000)
+    await nextTick()
+    expect(router.currentRoute.value.path).toBe('/')
+
+    gear.element.dispatchEvent(new MouseEvent('pointerdown', { bubbles: true }))
+    vi.advanceTimersByTime(2000)
+    await vi.waitFor(() => expect(router.currentRoute.value.path).toBe('/configuracoes'))
   })
 
   it('pelo teclado: segurar Enter por 2 s abre o editor', async () => {
