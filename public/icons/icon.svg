@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Ícone do app: balão de fala com três cards nas cores de pessoa, ação e coisa
+       ("eu quero água"). Os PNGs em public/icons foram gerados a partir deste arquivo. -->
+  <rect width="512" height="512" rx="96" fill="#0b5cad"/>
+  <path d="M128 104h256a56 56 0 0 1 56 56v136a56 56 0 0 1-56 56H236l-96 72 16-72h-28a56 56 0 0 1-56-56V160a56 56 0 0 1 56-56z" fill="#ffffff"/>
+  <rect x="100" y="164" width="88" height="128" rx="16" fill="#f2c200"/>
+  <rect x="212" y="164" width="88" height="128" rx="16" fill="#2e9e44"/>
+  <rect x="324" y="164" width="88" height="128" rx="16" fill="#f07f00"/>
+</svg>

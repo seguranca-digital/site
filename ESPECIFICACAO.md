@@ -394,7 +394,7 @@ Tela `SettingsView`, protegida da mesma forma que o editor:
 
 **Critério de aceite:** instalar o app no celular, ativar o modo avião, abrir o app e montar e falar uma frase. Isso vale para vozes locais; algumas vozes online, como as do Chrome desktop, precisam de internet, e por isso a preferência por `localService`.
 
-- [ ] PWA instalável e funcionando offline  
+- [x] PWA instalável e funcionando offline  
 - [ ] Deploy automático no GitHub Pages
 
 ---
