@@ -118,6 +118,29 @@ describe('BoardView', () => {
     expect(wrapper.find('[role="tabpanel"]').attributes('aria-labelledby')).toBe('aba-lugares')
   })
 
+  it('abas com rolagem lateral no celular, menos com a varredura ligada', async () => {
+    const tablist = () => wrapper.find('[role="tablist"]')
+    expect(tablist().classes()).toContain('category-tabs__list--scroll')
+
+    // O halo do destaque da varredura seria cortado pela rolagem: as abas voltam a quebrar linha
+    useSettingsStore().scanning.enabled = true
+    await nextTick()
+    expect(tablist().classes()).not.toContain('category-tabs__list--scroll')
+    useSettingsStore().scanning.enabled = false
+  })
+
+  it('a frase montada recebe foco, para rolar pelo teclado quando não cabe na barra', async () => {
+    await findButton(wrapper, 'eu').trigger('click')
+    const phrase = wrapper.find('.sentence-bar__items')
+    expect(phrase.attributes('tabindex')).toBe('0')
+    expect(phrase.attributes('aria-label')).toBe('Frase montada')
+  })
+
+  it('botões do parceiro mantêm o texto como nome, mesmo quando só o ícone aparece', () => {
+    const labels = wrapper.findAll('.board__tool-label').map((label) => label.text())
+    expect(labels).toEqual(['Editar prancha', 'Configurações'])
+  })
+
   it('com os rótulos ocultos, o card mostra só o pictograma, mas continua com o nome', async () => {
     useSettingsStore().showLabels = false
     await nextTick()

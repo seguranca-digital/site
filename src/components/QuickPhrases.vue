@@ -28,4 +28,13 @@ const emit = defineEmits<{ select: [card: Card] }>()
   border-radius: var(--radius);
   background: var(--color-surface-alt);
 }
+
+/* Celular: pictogramas e preenchimento menores, para as duas linhas de frases rápidas
+   ocuparem menos altura */
+@media (max-width: 40rem) {
+  .quick-phrases {
+    --picto-size: 2.25rem;
+    --card-padding-block: var(--space-1);
+  }
+}
 </style>

@@ -49,7 +49,8 @@ const hideLabel = computed(
   align-items: center;
   min-width: 0;
   min-height: var(--card-min-size);
-  padding: var(--space-2) 0.125rem;
+  /* As frases rápidas usam um preenchimento menor no celular */
+  padding: var(--card-padding-block, var(--space-2)) 0.125rem;
   /* Faixa superior com a cor da classe gramatical */
   border: var(--border-width) solid var(--color-border);
   border-top: var(--stripe-width) solid var(--word-color);
