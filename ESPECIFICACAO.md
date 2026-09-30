@@ -409,13 +409,13 @@ Tela `SettingsView`, protegida da mesma forma que o editor:
     
 - Criar `docs/co-design.md` a partir do modelo da seção 10\.  
     
-- [ ] Testes passando  
+- [x] Testes passando  
         
-- [ ] Lighthouse registrado  
+- [x] Lighthouse registrado  
         
-- [ ] README completo  
+- [x] README completo  
         
-- [ ] Modelo de co-design criado
+- [x] Modelo de co-design criado
 
 ---
 
