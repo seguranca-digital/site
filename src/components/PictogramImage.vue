@@ -1,21 +1,43 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { ref, watch } from 'vue'
+import { imageUrl } from '../composables/usePersistence'
+import { bundledPictogramUrl, isBundledPictogram, storedImageKey } from '../images'
 import type { PictogramSource } from '../types'
 
 const props = defineProps<{ picto: PictogramSource }>()
 
-// Pictogramas do ARASAAC baixados pelo script ficam em public/pictogramas
-const src = computed(() =>
-  props.picto.kind === 'arasaac'
-    ? `${import.meta.env.BASE_URL}pictogramas/${props.picto.id}.png`
-    : null,
-)
-
+// De onde vem a imagem: pictogramas do app ficam em public/pictogramas; os escolhidos no
+// editor e as fotos ficam no IndexedDB; sem cópia local, tenta o ARASAAC online
+const src = ref<string | null>(null)
 // Se a imagem não carregar, quem usa o componente continua funcionando só com o texto
 const failed = ref(false)
-watch(src, () => {
-  failed.value = false
-})
+let request = 0
+
+watch(
+  () => props.picto,
+  async (picto) => {
+    const current = ++request
+    failed.value = false
+    if (picto.kind === 'arasaac' && isBundledPictogram(picto.id)) {
+      src.value = bundledPictogramUrl(picto.id)
+      return
+    }
+    const key = storedImageKey(picto)
+    if (key === null) {
+      src.value = null
+      return
+    }
+    const url = await imageUrl(key)
+    // Ignora respostas antigas, se a imagem mudou enquanto carregava
+    if (current !== request) return
+    src.value =
+      url ??
+      (picto.kind === 'arasaac'
+        ? `https://api.arasaac.org/v1/pictograms/${picto.id}?download=false`
+        : null)
+  },
+  { immediate: true, deep: true },
+)
 </script>
 
 <template>

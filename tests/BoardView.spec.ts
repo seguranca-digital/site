@@ -2,8 +2,19 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { mount, type VueWrapper } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import { nextTick } from 'vue'
+import { createMemoryHistory, createRouter } from 'vue-router'
 import { useSettingsStore } from '../src/stores/settingsStore'
 import BoardView from '../src/views/BoardView.vue'
+
+function createTestRouter() {
+  return createRouter({
+    history: createMemoryHistory(),
+    routes: [
+      { path: '/', component: BoardView },
+      { path: '/editor', component: { render: () => null } },
+    ],
+  })
+}
 
 // O jsdom não tem Web Speech API: simula antes de importar os módulos,
 // porque o useSpeech detecta o suporte ao ser carregado
@@ -52,7 +63,7 @@ describe('BoardView', () => {
   beforeEach(() => {
     synth.speak.mockClear()
     synth.cancel.mockClear()
-    wrapper = mount(BoardView, { global: { plugins: [createPinia()] } })
+    wrapper = mount(BoardView, { global: { plugins: [createPinia(), createTestRouter()] } })
   })
 
   it('monta "eu quero água" e fala a frase ao tocar em Falar', async () => {
@@ -106,6 +117,50 @@ describe('BoardView', () => {
   })
 })
 
+describe('Entrada protegida do editor', () => {
+  beforeEach(() => {
+    vi.useFakeTimers()
+  })
+  afterEach(() => {
+    vi.useRealTimers()
+  })
+
+  async function setup() {
+    const router = createTestRouter()
+    await router.push('/')
+    const wrapper = mount(BoardView, { global: { plugins: [createPinia(), router] } })
+    const gear = wrapper.findAll('button').find((button) => button.text().startsWith('Editar prancha'))!
+    return { router, gear }
+  }
+
+  it('segurar a engrenagem por 2 s abre o editor', async () => {
+    const { router, gear } = await setup()
+    gear.element.dispatchEvent(new MouseEvent('pointerdown', { bubbles: true }))
+    vi.advanceTimersByTime(2000)
+    await vi.waitFor(() => expect(router.currentRoute.value.path).toBe('/editor'))
+  })
+
+  it('toque rápido na engrenagem não abre o editor', async () => {
+    const { router, gear } = await setup()
+    gear.element.dispatchEvent(new MouseEvent('pointerdown', { bubbles: true }))
+    vi.advanceTimersByTime(300)
+    gear.element.dispatchEvent(new MouseEvent('pointerup', { bubbles: true }))
+    vi.advanceTimersByTime(5000)
+    await nextTick()
+    expect(router.currentRoute.value.path).toBe('/')
+  })
+
+  it('pelo teclado: segurar Enter por 2 s abre o editor', async () => {
+    const { router, gear } = await setup()
+    await gear.trigger('keydown', { key: 'Enter' })
+    for (let i = 0; i < 20; i++) {
+      vi.advanceTimersByTime(100)
+      await gear.trigger('keydown', { key: 'Enter', repeat: true })
+    }
+    await vi.waitFor(() => expect(router.currentRoute.value.path).toBe('/editor'))
+  })
+})
+
 describe('BoardView com varredura', () => {
   const INTERVAL = 1500
   let wrapper: VueWrapper
@@ -120,7 +175,10 @@ describe('BoardView com varredura', () => {
     const settings = useSettingsStore()
     settings.scanning.enabled = true
     configure?.(settings)
-    wrapper = mount(BoardView, { global: { plugins: [pinia] }, attachTo: document.body })
+    wrapper = mount(BoardView, {
+      global: { plugins: [pinia, createTestRouter()] },
+      attachTo: document.body,
+    })
     await flush()
     return settings
   }
