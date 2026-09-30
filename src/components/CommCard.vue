@@ -1,20 +1,42 @@
 <script setup lang="ts">
+import { computed, ref, watch } from 'vue'
+import { useSettingsStore } from '../stores/settingsStore'
 import type { Card } from '../types'
 import PictogramImage from './PictogramImage.vue'
 
-defineProps<{ card: Card }>()
+const props = defineProps<{ card: Card }>()
 defineEmits<{ select: [card: Card] }>()
+
+const settings = useSettingsStore()
+const imageFailed = ref(false)
+watch(
+  () => props.card.picto,
+  () => {
+    imageFailed.value = false
+  },
+)
+
+// Rótulos ocultos: o texto sai da tela, mas continua sendo o nome do botão (leitor de tela e
+// varredura auditiva). Sem imagem, o texto aparece de qualquer jeito, senão o card fica vazio.
+const hideLabel = computed(
+  () => !settings.showLabels && props.card.picto.kind !== 'none' && !imageFailed.value,
+)
 </script>
 
 <template>
   <button
     type="button"
     class="comm-card"
+    :class="{ 'comm-card--no-label': hideLabel }"
     :style="{ '--word-color': `var(--color-${card.wordClass})` }"
     @click="$emit('select', card)"
   >
-    <PictogramImage :picto="card.picto" class="comm-card__picto" />
-    <span class="comm-card__label">{{ card.label }}</span>
+    <PictogramImage
+      :picto="card.picto"
+      class="comm-card__picto"
+      @failed="imageFailed = $event"
+    />
+    <span class="comm-card__label" :class="{ 'visually-hidden': hideLabel }">{{ card.label }}</span>
   </button>
 </template>
 
@@ -51,6 +73,11 @@ defineEmits<{ select: [card: Card] }>()
 /* Pictogramas alinhados no topo de cada linha da grade */
 .comm-card__picto {
   width: min(100%, var(--picto-size));
+}
+
+/* Sem rótulo, o pictograma fica centralizado no card */
+.comm-card--no-label {
+  justify-content: center;
 }
 
 /* O texto ocupa o espaço restante e fica centralizado nele (ou no card inteiro, sem imagem) */

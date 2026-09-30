@@ -1,13 +1,20 @@
 import { createStore, del, get, keys, set, type UseStore } from 'idb-keyval'
 import { watch } from 'vue'
-import { BACKUP_FORMAT, BACKUP_VERSION, validateBoard, type BackupFile } from '../backup'
+import {
+  BACKUP_FORMAT,
+  BACKUP_VERSION,
+  sanitizeSettings,
+  validateBoard,
+  type BackupFile,
+} from '../backup'
 import { blobToDataUrl, dataUrlToBlob, storedImageKey } from '../images'
 import { useBoardStore } from '../stores/boardStore'
 import { useSettingsStore } from '../stores/settingsStore'
-import type { Board } from '../types'
+import type { Board, Settings } from '../types'
 
-// Prancha e imagens (Blob) ficam no IndexedDB deste aparelho
+// Prancha, imagens (Blob) e configurações ficam no IndexedDB deste aparelho
 const BOARD_KEY = 'prancha'
+const SETTINGS_KEY = 'configuracoes'
 const IMAGE_PREFIX = 'imagem:'
 const SAVE_DELAY_MS = 500
 
@@ -44,6 +51,25 @@ export async function saveBoard(board: Board) {
   const plain = JSON.parse(JSON.stringify(board)) as Board
   await set(BOARD_KEY, plain, db())
   await pruneImages(plain)
+}
+
+// --- Configurações ---
+
+export async function loadSettings(): Promise<Settings | null> {
+  if (!isAvailable) return null
+  try {
+    const saved: unknown = await get(SETTINGS_KEY, db())
+    // Campos que faltarem ou vierem inválidos ficam no padrão
+    return saved === undefined ? null : sanitizeSettings(saved)
+  } catch (error) {
+    console.warn('Não foi possível ler as configurações salvas:', error)
+    return null
+  }
+}
+
+export async function saveSettings(settings: Settings) {
+  if (!isAvailable) return
+  await set(SETTINGS_KEY, JSON.parse(JSON.stringify(settings)) as Settings, db())
 }
 
 // --- Imagens ---
@@ -139,23 +165,31 @@ export async function applyBackup(backup: BackupFile) {
   useSettingsStore().$patch(backup.settings)
 }
 
-// Carrega a prancha salva e passa a salvar automaticamente a cada alteração
-export async function setupPersistence() {
-  const boardStore = useBoardStore()
-  const saved = await loadBoard()
-  if (saved) boardStore.replaceBoard(saved)
-
+// Chama `save` ~500 ms depois da última alteração em `source`
+function autosave<T>(source: () => T, save: (value: T) => Promise<void>, what: string) {
   let timer: ReturnType<typeof setTimeout> | undefined
   watch(
-    () => boardStore.board,
+    source,
     () => {
       clearTimeout(timer)
       timer = setTimeout(() => {
-        saveBoard(boardStore.board).catch((error: unknown) => {
-          console.error('Não foi possível salvar a prancha:', error)
+        save(source()).catch((error: unknown) => {
+          console.error(`Não foi possível salvar ${what}:`, error)
         })
       }, SAVE_DELAY_MS)
     },
     { deep: true },
   )
+}
+
+// Carrega a prancha e as configurações salvas e passa a salvar automaticamente a cada alteração
+export async function setupPersistence() {
+  const boardStore = useBoardStore()
+  const settings = useSettingsStore()
+  const [savedBoard, savedSettings] = await Promise.all([loadBoard(), loadSettings()])
+  if (savedBoard) boardStore.replaceBoard(savedBoard)
+  if (savedSettings) settings.$patch(savedSettings)
+
+  autosave(() => boardStore.board, saveBoard, 'a prancha')
+  autosave(() => settings.$state, saveSettings, 'as configurações')
 }

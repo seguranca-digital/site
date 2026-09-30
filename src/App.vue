@@ -1,7 +1,17 @@
 <script setup lang="ts">
+import { watchEffect } from 'vue'
 import { RouterLink, RouterView, useRoute } from 'vue-router'
+import { useSettingsStore } from './stores/settingsStore'
 
 const route = useRoute()
+const settings = useSettingsStore()
+
+// Tema e tamanho do texto valem para o app inteiro e mudam na hora (tokens em styles/)
+watchEffect(() => {
+  const root = document.documentElement
+  root.dataset.theme = settings.theme
+  root.style.setProperty('--font-scale', String(settings.fontScale))
+})
 </script>
 
 <template>

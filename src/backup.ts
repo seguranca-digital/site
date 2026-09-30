@@ -1,4 +1,9 @@
-import { createDefaultSettings } from './stores/settingsStore'
+import {
+  createDefaultSettings,
+  SETTINGS_LIMITS,
+  THEMES,
+  type NumberLimits,
+} from './stores/settingsStore'
 import type { Board, Card, Category, PictogramSource, Settings } from './types'
 import { isWordClass } from './wordClasses'
 
@@ -116,10 +121,35 @@ export function sanitizeSettings(value: unknown): Settings {
 
   // Campos com valores fixos
   const defaults = createDefaultSettings()
-  if (!['claro', 'escuro', 'alto-contraste'].includes(settings.theme)) settings.theme = defaults.theme
+  if (!THEMES.includes(settings.theme)) settings.theme = defaults.theme
   if (!['automatica', 'dois-botoes'].includes(settings.scanning.mode)) {
     settings.scanning.mode = defaults.scanning.mode
   }
+
+  // Números: dentro da faixa da tela de configurações e no passo dela (ex.: colunas inteiras)
+  const limit = (value: number, fallback: number, { min, max, step }: NumberLimits) => {
+    if (!Number.isFinite(value)) return fallback
+    const stepped = min + Math.round((value - min) / step) * step
+    // Arredonda para evitar 0.30000000000000004
+    return Math.min(max, Math.max(min, Number(stepped.toFixed(4))))
+  }
+  settings.rate = limit(settings.rate, defaults.rate, SETTINGS_LIMITS.rate)
+  settings.pitch = limit(settings.pitch, defaults.pitch, SETTINGS_LIMITS.pitch)
+  settings.volume = limit(settings.volume, defaults.volume, SETTINGS_LIMITS.volume)
+  settings.gridColumns = limit(settings.gridColumns, defaults.gridColumns, SETTINGS_LIMITS.gridColumns)
+  settings.fontScale = limit(settings.fontScale, defaults.fontScale, SETTINGS_LIMITS.fontScale)
+  const scanning = settings.scanning
+  scanning.intervalMs = limit(scanning.intervalMs, defaults.scanning.intervalMs, SETTINGS_LIMITS.intervalMs)
+  scanning.acceptanceMs = limit(
+    scanning.acceptanceMs,
+    defaults.scanning.acceptanceMs,
+    SETTINGS_LIMITS.acceptanceMs,
+  )
+  scanning.loopsBeforePause = limit(
+    scanning.loopsBeforePause,
+    defaults.scanning.loopsBeforePause,
+    SETTINGS_LIMITS.loopsBeforePause,
+  )
   return settings
 }
 

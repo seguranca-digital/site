@@ -134,9 +134,13 @@ function onSpeak() {
 
 <style scoped>
 .sentence-bar {
+  /* Contêiner das consultas @container abaixo. A fonte base acompanha o tamanho do texto
+     das configurações, então as medidas em "em" crescem junto com ele */
+  container-type: inline-size;
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-3);
+  font-size: calc(1rem * var(--font-scale));
   padding: var(--space-3);
   border: var(--border-width) solid var(--color-border);
   border-radius: var(--radius);
@@ -185,7 +189,7 @@ function onSpeak() {
 
 .sentence-bar__actions {
   display: grid;
-  flex: 1 1 22rem;
+  flex: 1 1 22em;
   grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) minmax(0, 1fr);
   gap: var(--gap);
 }
@@ -204,8 +208,9 @@ function onSpeak() {
   font-size: calc(1rem * var(--font-scale));
 }
 
-/* Celulares estreitos: ícone acima do texto em todos os botões, para caberem lado a lado */
-@media (max-width: 26rem) {
+/* Barra estreita (celular ou texto grande): ícone acima do texto em todos os botões,
+   para caberem lado a lado */
+@container (max-width: 23em) {
   .sentence-bar__speak {
     flex-direction: column;
     gap: var(--space-1);
@@ -214,6 +219,17 @@ function onSpeak() {
 
   .sentence-bar__secondary {
     padding-inline: var(--space-1);
+  }
+}
+
+/* Mais estreita ainda: "Falar" na linha de cima e os outros dois embaixo */
+@container (max-width: 16em) {
+  .sentence-bar__actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .sentence-bar__speak {
+    grid-column: 1 / -1;
   }
 }
 </style>

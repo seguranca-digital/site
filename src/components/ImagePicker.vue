@@ -274,6 +274,8 @@ function chooseNone() {
   height: auto;
   aspect-ratio: 1;
   object-fit: contain;
+  border-radius: var(--radius-small);
+  background: var(--color-picto-bg);
 }
 
 /* Escolhido: borda grossa e fundo diferente, não só a cor */

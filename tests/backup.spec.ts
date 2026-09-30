@@ -118,6 +118,31 @@ describe('validação de importação de backup', () => {
     expect(settings).not.toHaveProperty('campoDesconhecido')
   })
 
+  it('mantém os números dentro das faixas da tela de configurações', () => {
+    const settings = sanitizeSettings({
+      rate: 9,
+      pitch: -1,
+      volume: 0.33,
+      gridColumns: 3.6,
+      fontScale: 1.3,
+      scanning: { intervalMs: 100, acceptanceMs: 10000, loopsBeforePause: 0 },
+    })
+    expect(settings.rate).toBe(2)
+    expect(settings.pitch).toBe(0)
+    expect(settings.volume).toBe(0.3)
+    expect(settings.gridColumns).toBe(4)
+    expect(settings.fontScale).toBe(1.25)
+    expect(settings.scanning.intervalMs).toBe(500)
+    expect(settings.scanning.acceptanceMs).toBe(2000)
+    expect(settings.scanning.loopsBeforePause).toBe(1)
+  })
+
+  it('troca números inválidos (NaN, infinito) pelo padrão', () => {
+    const settings = sanitizeSettings({ rate: Number.NaN, gridColumns: Number.POSITIVE_INFINITY })
+    expect(settings.rate).toBe(0.9)
+    expect(settings.gridColumns).toBe(4)
+  })
+
   it('backup sem configurações usa as padrão', () => {
     const { settings, ...semConfiguracoes } = validBackup()
     void settings

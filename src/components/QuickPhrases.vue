@@ -22,7 +22,7 @@ const emit = defineEmits<{ select: [card: Card] }>()
 <style scoped>
 .quick-phrases {
   /* Rótulos curtos: cabem 4 por linha em celulares; pictogramas menores para a linha ocupar pouca altura */
-  --card-min-size: 4.5rem;
+  --card-min-size: calc(4.5rem * var(--font-scale));
   --picto-size: 3rem;
   padding: var(--space-2);
   border-radius: var(--radius);
