@@ -16,6 +16,10 @@
   --color-selected-text: #ffffff;
   --color-notice-bg: #fff4ce;
   --color-notice-border: #8a6d00;
+  --color-danger: #b3261e;
+  --color-danger-hover: #8c1d18;
+  --color-danger-text: #ffffff;
+  --color-danger-bg: #fdecea;
 
   /* Varredura: contorno escuro com halo amarelo, visível sobre fundo claro ou escuro */
   --color-scan: #1a1a1a;

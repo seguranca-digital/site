@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { nextTick, useTemplateRef, watch } from 'vue'
+import { useRouter } from 'vue-router'
 import CardGrid from '../components/CardGrid.vue'
 import CategoryTabs from '../components/CategoryTabs.vue'
+import HoldButton from '../components/HoldButton.vue'
 import QuickPhrases from '../components/QuickPhrases.vue'
 import ScanningLayer from '../components/ScanningLayer.vue'
 import SentenceBar from '../components/SentenceBar.vue'
@@ -15,6 +17,7 @@ const boardStore = useBoardStore()
 const sentence = useSentenceStore()
 const settings = useSettingsStore()
 const { speak, isSupported } = useSpeech()
+const router = useRouter()
 const scanToggleRef = useTemplateRef<HTMLButtonElement>('scanToggle')
 
 // Tocar em um card: adiciona à frase e, se configurado, fala a palavra
@@ -60,6 +63,21 @@ watch(
         </svg>
         Varredura
       </button>
+      <!-- Entrada protegida: segurar 2 s, para o usuário principal não abrir o editor sem querer -->
+      <HoldButton class="board__tool" @complete="router.push('/editor')">
+        <svg class="btn__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="2" />
+          <path
+            d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+          />
+          <circle cx="12" cy="12" r="7" fill="none" stroke="currentColor" stroke-width="2" />
+        </svg>
+        Editar prancha
+      </HoldButton>
     </div>
 
     <p v-if="!isSupported" class="notice">
@@ -106,6 +124,8 @@ watch(
 
 .board__toolbar {
   display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
   justify-content: flex-end;
 }
 

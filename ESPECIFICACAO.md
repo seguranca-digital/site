@@ -342,17 +342,17 @@ export interface Settings {
     
 - As confirmações usam o elemento nativo `<dialog>`, com o foco gerenciado.  
     
-- [ ] Entrada protegida  
+- [x] Entrada protegida  
         
-- [ ] CRUD de categorias e cards  
+- [x] CRUD de categorias e cards  
         
-- [ ] Busca ARASAAC, upload de foto e redimensionamento  
+- [x] Busca ARASAAC, upload de foto e redimensionamento  
         
-- [ ] Exportar e importar backup, com validação  
+- [x] Exportar e importar backup, com validação  
         
-- [ ] Persistência automática  
+- [x] Persistência automática  
         
-- [ ] Testes: validação de importação
+- [x] Testes: validação de importação
 
 ---
 

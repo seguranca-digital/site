@@ -2,6 +2,7 @@ import { nextTick } from 'vue'
 import { createRouter, createWebHashHistory } from 'vue-router'
 import AboutView from './views/AboutView.vue'
 import BoardView from './views/BoardView.vue'
+import EditorView from './views/EditorView.vue'
 
 const appName = 'Comunicador Alternativo'
 
@@ -11,6 +12,7 @@ export const router = createRouter({
   routes: [
     { path: '/', name: 'board', component: BoardView },
     { path: '/sobre', name: 'about', component: AboutView, meta: { title: 'Sobre' } },
+    { path: '/editor', name: 'editor', component: EditorView, meta: { title: 'Editor' } },
     { path: '/:pathMatch(.*)*', redirect: '/' },
   ],
   scrollBehavior: () => ({ top: 0 }),
