@@ -77,7 +77,7 @@ watch(
           />
           <circle cx="12" cy="12" r="7" fill="none" stroke="currentColor" stroke-width="2" />
         </svg>
-        Editar prancha
+        <span class="board__tool-label">Editar prancha</span>
       </HoldButton>
       <HoldButton class="board__tool" @complete="router.push('/configuracoes')">
         <svg class="btn__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
@@ -92,7 +92,7 @@ watch(
           <circle cx="15" cy="12" r="2.75" fill="currentColor" />
           <circle cx="7" cy="18" r="2.75" fill="currentColor" />
         </svg>
-        Configurações
+        <span class="board__tool-label">Configurações</span>
       </HoldButton>
     </div>
 
@@ -109,6 +109,7 @@ watch(
       :categories="boardStore.board.categories"
       :active-id="boardStore.activeCategory?.id ?? null"
       panel-id="painel-categoria"
+      :scrollable="!settings.scanning.enabled"
       @select="boardStore.selectCategory"
     >
       <CardGrid
@@ -155,5 +156,26 @@ watch(
   border-color: var(--color-selected);
   background: var(--color-selected);
   color: var(--color-selected-text);
+}
+
+/* Celular: menos espaço entre as regiões, para a grade de cards aparecer sem rolar a tela */
+@media (max-width: 40rem) {
+  .board {
+    gap: var(--space-2);
+    padding-block: var(--space-2);
+  }
+}
+
+/* Tela estreita: os botões do parceiro ficam só com o ícone, para a barra caber em uma linha.
+   O texto sai da tela, mas continua sendo o nome acessível do botão */
+@media (max-width: 30rem) {
+  .board__tool-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
 }
 </style>

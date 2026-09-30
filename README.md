@@ -39,6 +39,9 @@ _Resumo das sessões: preencher depois das sessões._
 - A cor da borda indica a classe da palavra (Chave de Fitzgerald adaptada): pessoa em amarelo, ação em verde, coisa em laranja, descrição em azul, social em rosa, pergunta em roxo, negação em vermelho.
 - A voz é escolhida automaticamente, dando preferência a uma **voz em português do Brasil instalada no aparelho**, que funciona offline.
 - Se o navegador não tiver síntese de voz, o app avisa e oferece **Mostrar frase**, que exibe a frase em texto grande para o parceiro ler.
+- **No celular em retrato,** a grade de cards aparece sem precisar rolar a tela: as categorias ficam em uma faixa com rolagem lateral, e a frase rola na horizontal em vez de quebrar linha. Assim, os cards não mudam de lugar enquanto a frase cresce.
+
+<img src="docs/prints/prancha-celular.png" alt="Prancha no celular com a frase &quot;eu quero água&quot;" width="300">
 
 ### Modo de varredura (acessibilidade motora)
 
@@ -96,7 +99,7 @@ Lighthouse 13.5, emulação de celular, build de produção, em 30/09/2026:
 
 | Tela | Acessibilidade | Desempenho | Boas práticas | SEO |
 | :--- | :---: | :---: | :---: | :---: |
-| Prancha | **100** | 95 | 100 | 100 |
+| Prancha | **100** | 98 | 100 | 100 |
 | Editor | **100** | – | – | – |
 | Configurações | **100** | – | – | – |
 | Sobre | **100** | – | – | – |

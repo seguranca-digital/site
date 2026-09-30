@@ -11,6 +11,7 @@ const settings = useSettingsStore()
 const { speak, isSupported } = useSpeech()
 
 const speakButtonRef = useTemplateRef<HTMLButtonElement>('speakButton')
+const itemsRef = useTemplateRef<HTMLOListElement>('items')
 const largeTextDialogRef = useTemplateRef<InstanceType<typeof LargeTextDialog>>('largeTextDialog')
 const largeText = ref('')
 const announcement = ref('')
@@ -27,6 +28,16 @@ watch(
     announcement.value = ''
     await nextTick()
     announcement.value = `Adicionado: ${last.label}`
+  },
+)
+
+// No celular a frase rola na horizontal: mantém a última palavra à vista
+watch(
+  () => sentence.items.length,
+  async () => {
+    await nextTick()
+    const items = itemsRef.value
+    if (items) items.scrollLeft = items.scrollWidth
   },
 )
 
@@ -47,7 +58,14 @@ function onSpeak() {
     <h2 id="sentence-bar-title" class="visually-hidden">Frase</h2>
 
     <div class="sentence-bar__phrase">
-      <ol v-if="!sentence.isEmpty" class="sentence-bar__items">
+      <!-- Focável: no celular a frase rola na horizontal, e pelo teclado se rola com as setas -->
+      <ol
+        v-if="!sentence.isEmpty"
+        ref="items"
+        class="sentence-bar__items"
+        tabindex="0"
+        aria-label="Frase montada"
+      >
         <li
           v-for="(card, index) in sentence.items"
           :key="index"
@@ -206,6 +224,50 @@ function onSpeak() {
   min-height: 4.5rem;
   padding-inline: var(--space-2);
   font-size: calc(1rem * var(--font-scale));
+}
+
+/* Celular: barra mais baixa e de altura estável. As palavras rolam na horizontal em vez de
+   quebrar linha, então a grade de cards não muda de lugar enquanto a frase cresce */
+@media (max-width: 40rem) {
+  .sentence-bar {
+    gap: var(--space-2);
+    padding: var(--space-2);
+  }
+
+  /* Altura de uma palavra (faixa, bordas e preenchimento + pictograma + uma linha de texto),
+     para a barra não crescer ao entrar a primeira palavra */
+  .sentence-bar__phrase {
+    /* min-width: 0 deixa a frase encolher até a largura da barra, senão ela não rola */
+    min-width: 0;
+    min-height: calc(3.5rem + 1.5rem * var(--font-scale));
+  }
+
+  .sentence-bar__items {
+    flex-wrap: nowrap;
+    min-width: 0;
+    overflow-x: auto;
+  }
+
+  .sentence-bar__item {
+    flex: none;
+    font-size: calc(1.125rem * var(--font-scale));
+  }
+
+  .sentence-bar__picto {
+    width: 2.25rem;
+  }
+
+  /* Botões mais baixos (ícone menor, menos preenchimento), sem passar dos 64 px mínimos */
+  .sentence-bar__speak,
+  .sentence-bar__secondary {
+    min-height: 4rem;
+    padding-block: var(--space-1);
+  }
+
+  .sentence-bar__speak .btn__icon {
+    width: 1em;
+    height: 1em;
+  }
 }
 
 /* Barra estreita (celular ou texto grande): ícone acima do texto em todos os botões,
