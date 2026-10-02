@@ -2,7 +2,7 @@
 
 Comunicador por pictogramas **gratuito**, que roda no navegador de qualquer celular, tablet ou computador, **funciona sem internet**, fala as frases em voz alta e tem **modo de varredura** para quem usa um único botão (acionador).
 
-- **App publicado:** https://seguranca-digital.github.io/site/
+- **App publicado:** https://tecnologia-assistiva.github.io/site/
 
 Trabalho da disciplina de **Tecnologias Assistivas**: um MVP digital de baixo custo, construído com co-design, para uma demanda funcional real.
 
