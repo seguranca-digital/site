@@ -7,7 +7,6 @@ const props = defineProps<{
   categories: Category[]
   activeId: string | null
   panelId: string
-  // Em telas estreitas, as abas ficam em uma linha só, com rolagem lateral
   scrollable?: boolean
 }>()
 const emit = defineEmits<{ select: [id: string] }>()
@@ -18,7 +17,6 @@ function tabId(categoryId: string): string {
   return `aba-${categoryId}`
 }
 
-// Com rolagem lateral, a aba escolhida pode estar cortada na borda: rola até ela aparecer inteira
 watch(
   () => props.activeId,
   async (id) => {
@@ -26,12 +24,10 @@ watch(
     if (index < 0) return
     await nextTick()
     const tab = tablistRef.value?.querySelectorAll<HTMLElement>('[role="tab"]')[index]
-    // O jsdom dos testes não implementa scrollIntoView
     tab?.scrollIntoView?.({ block: 'nearest', inline: 'nearest' })
   },
 )
 
-// Setas esquerda/direita, Home e End trocam de aba (padrão ARIA de abas, com ativação automática)
 function onKeydown(event: KeyboardEvent) {
   const count = props.categories.length
   if (count === 0) return
@@ -135,7 +131,6 @@ function onKeydown(event: KeyboardEvent) {
   line-height: 1.2;
 }
 
-/* O pictograma tem fundo claro próprio, então continua legível na aba ativa (fundo escuro) */
 .category-tabs__picto {
   width: 2.75rem;
 }
@@ -144,7 +139,6 @@ function onKeydown(event: KeyboardEvent) {
   background: var(--color-surface-alt);
 }
 
-/* Aba ativa: cores invertidas e texto em negrito, não só mudança de cor */
 .category-tabs__tab[aria-selected='true'] {
   border-color: var(--color-selected);
   background: var(--color-selected);
@@ -152,10 +146,6 @@ function onKeydown(event: KeyboardEvent) {
   font-weight: 700;
 }
 
-/* Celular: em várias linhas, as abas empurravam a grade de cards para fora da tela.
-   A aba cortada na borda mostra que dá para rolar; o foco (Tab, setas) rola até a aba sozinho.
-   O preenchimento, compensado pela margem negativa, evita cortar o contorno de foco.
-   Com a varredura ligada, as abas voltam a quebrar linha (o halo do destaque seria cortado). */
 @media (max-width: 40rem) {
   .category-tabs__list--scroll {
     flex-wrap: nowrap;

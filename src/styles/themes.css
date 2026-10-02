@@ -1,7 +1,3 @@
-/* Temas: o App.vue coloca data-theme no <html> conforme as configurações.
-   Só as cores mudam; o tema claro (padrão) fica em tokens.css.
-   Contraste conferido: texto ≥ 7:1, bordas, foco e faixas das classes ≥ 3:1. */
-
 :root[data-theme='escuro'] {
   color-scheme: dark;
 
@@ -25,11 +21,9 @@
   --color-danger-text: #1a0000;
   --color-danger-bg: #3d1512;
 
-  /* Varredura: contorno branco com halo amarelo */
   --color-scan: #ffffff;
   --color-scan-text: #121212;
 
-  /* Cores das classes mais claras, para a faixa aparecer sobre o fundo escuro */
   --color-acao: #4cc764;
   --color-coisa: #ff9933;
   --color-descricao: #5aa0ff;
@@ -39,7 +33,6 @@
   --color-outro: #a8a8a8;
 }
 
-/* Alto contraste: fundo preto, texto branco; bordas, foco e seleção em amarelo */
 :root[data-theme='alto-contraste'] {
   color-scheme: dark;
 

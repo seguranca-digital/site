@@ -1,7 +1,6 @@
 import pictogramasMap from './data/pictogramas-map.json'
 import type { PictogramSource } from './types'
 
-// Pictogramas que vêm com o app (baixados pelo script para public/pictogramas)
 const bundledPictogramIds = new Set<number>(Object.values(pictogramasMap as Record<string, number>))
 
 export function isBundledPictogram(id: number): boolean {
@@ -12,16 +11,12 @@ export function bundledPictogramUrl(id: number): string {
   return `${import.meta.env.BASE_URL}pictogramas/${id}.png`
 }
 
-// Chave no IndexedDB da imagem de um pictograma, ou null se ele não guarda imagem
-// (sem imagem, ou pictograma que já vem com o app)
 export function storedImageKey(picto: PictogramSource): string | null {
   if (picto.kind === 'custom') return picto.blobKey
   if (picto.kind === 'arasaac' && !isBundledPictogram(picto.id)) return `arasaac:${picto.id}`
   return null
 }
 
-// Redimensiona a imagem para no máximo `maxSide` px no maior lado (fotos do celular
-// chegam a vários MB). Fundo branco, porque o JPEG não tem transparência.
 export async function resizeImage(file: Blob, maxSide = 400): Promise<Blob> {
   const bitmap = await createImageBitmap(file, { imageOrientation: 'from-image' })
   const scale = Math.min(1, maxSide / Math.max(bitmap.width, bitmap.height))

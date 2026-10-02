@@ -1,4 +1,3 @@
-/* Listas do editor (categorias e cards): item principal clicável + controles ↑ ↓ */
 .editor-list {
   display: flex;
   flex-direction: column;
@@ -18,14 +17,12 @@
   background: var(--color-surface);
 }
 
-/* Selecionado: borda grossa e fundo diferente, não só a cor */
 .editor-list__item--selected {
   border-width: 0.25rem;
   border-color: var(--color-selected);
   background: var(--color-surface-alt);
 }
 
-/* Oculto: borda tracejada + selo "Oculto" (sem transparência, que baixaria o contraste do texto) */
 .editor-list__item--hidden {
   border-style: dashed;
 }

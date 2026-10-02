@@ -27,7 +27,6 @@ async function move(card: Card, delta: number) {
   if (!boardStore.moveCardWithin(props.containerId, card.id, delta)) return
   const position = cards.value.findIndex((item) => item.id === card.id) + 1
   announcement.value = `${card.label}: posição ${position} de ${cards.value.length}.`
-  // A lista é redesenhada; o foco volta para o mesmo botão
   await nextTick()
   listRef.value
     ?.querySelector<HTMLElement>(`[data-move="${delta < 0 ? 'up' : 'down'}-${card.id}"]`)
@@ -39,7 +38,6 @@ function onDeleted(label: string) {
   newButtonRef.value?.focus()
 }
 
-// Leva o foco (e a rolagem, no celular) até o título da lista
 async function focusHeading() {
   await nextTick()
   headingRef.value?.focus()
@@ -71,7 +69,6 @@ defineExpose({ focusHeading })
         class="editor-list__item"
         :class="{ 'editor-list__item--hidden': card.hidden }"
       >
-        <!-- O texto do botão inclui classe e estado, para o leitor de tela ouvir tudo -->
         <button
           type="button"
           class="editor-list__main"

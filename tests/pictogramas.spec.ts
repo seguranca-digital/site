@@ -5,7 +5,6 @@ import { createInitialBoard } from '../src/stores/boardStore'
 
 const map: Record<string, number> = pictogramasMap
 
-// PNGs presentes em public/pictogramas (lista montada pelo Vite, sem importar os arquivos)
 const pngFiles = new Set(
   Object.keys(import.meta.glob('/public/pictogramas/*.png')).map((path) =>
     path.replace('/public/pictogramas/', ''),

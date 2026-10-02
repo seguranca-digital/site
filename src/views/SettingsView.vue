@@ -8,15 +8,12 @@ import { pickVoice, useSpeech } from '../composables/useSpeech'
 import { createDefaultSettings, SETTINGS_LIMITS, useSettingsStore } from '../stores/settingsStore'
 import type { Settings } from '../types'
 
-// Modo do parceiro de comunicação: tudo vale na hora e é salvo automaticamente (usePersistence)
 const settings = useSettingsStore()
 const { speak, voices, isSupported } = useSpeech()
 const confirmRef = useTemplateRef<InstanceType<typeof ConfirmDialog>>('confirm')
 const voiceId = useId()
 const voiceHintId = useId()
 const announcement = ref('')
-
-// --- Voz ---
 
 function isPortuguese(voice: SpeechSynthesisVoice): boolean {
   const lang = voice.lang.replace('_', '-').toLowerCase()
@@ -27,7 +24,6 @@ function isBrazilian(voice: SpeechSynthesisVoice): boolean {
   return voice.lang.replace('_', '-').toLowerCase() === 'pt-br'
 }
 
-// Vozes em português: pt-BR primeiro e, dentro de cada grupo, as que funcionam offline
 const portugueseVoices = computed(() =>
   voices.value.filter(isPortuguese).sort((a, b) => {
     const rank = (voice: SpeechSynthesisVoice) =>
@@ -41,13 +37,11 @@ function voiceLabel(voice: SpeechSynthesisVoice): string {
   return `${voice.name}${region}${voice.localService ? ' (offline)' : ''}`
 }
 
-// Voz que o modo automático usaria agora, para o parceiro saber qual é
 const automaticLabel = computed(() => {
   const voice = pickVoice(voices.value, null)
   return voice ? `Automática: ${voiceLabel(voice)}` : 'Automática (voz padrão do navegador)'
 })
 
-// Voz escolhida em outro aparelho (veio num backup) e que não existe neste
 const missingVoice = computed(
   () =>
     settings.voiceURI !== null &&
@@ -59,8 +53,6 @@ function testVoice() {
   speak('Olá! Esta é a voz do comunicador.')
 }
 
-// --- Textos dos controles deslizantes (o mesmo texto é lido pelo leitor de tela) ---
-
 function decimal(value: number, digits = 1): string {
   return value.toLocaleString('pt-BR', {
     minimumFractionDigits: digits,
@@ -68,7 +60,6 @@ function decimal(value: number, digits = 1): string {
   })
 }
 
-// Em português, o plural começa em 2: "1,5 segundo", "2 segundos"
 function seconds(ms: number): string {
   const value = ms / 1000
   const text = value.toLocaleString('pt-BR', { maximumFractionDigits: 1 })
@@ -84,8 +75,6 @@ const formats = {
   acceptance: (value: number) => (value === 0 ? 'desligado' : seconds(value)),
   loops: (value: number) => (value === 1 ? '1 volta' : `${value} voltas`),
 }
-
-// --- Opções de escolha única ---
 
 const themes: { value: Settings['theme']; label: string }[] = [
   { value: 'claro', label: 'Claro' },
@@ -320,7 +309,6 @@ async function restoreDefaults() {
   gap: var(--space-4);
 }
 
-/* Telas largas: duas colunas de seções */
 @media (min-width: 56rem) {
   .settings__sections {
     grid-template-columns: repeat(2, minmax(0, 1fr));

@@ -5,9 +5,7 @@ import CommCard from './CommCard.vue'
 
 const props = defineProps<{
   cards: Card[]
-  // Número máximo de colunas; sem valor, até um card por coluna, se couber
   columns?: number
-  // Cada linha vira um grupo da varredura (grade principal)
   scanRows?: boolean
 }>()
 const emit = defineEmits<{ select: [card: Card] }>()
@@ -15,15 +13,12 @@ const emit = defineEmits<{ select: [card: Card] }>()
 const containerRef = useTemplateRef<HTMLDivElement>('container')
 const probeRef = useTemplateRef<HTMLSpanElement>('probe')
 
-// Colunas que cabem na largura atual sem o card ficar menor que --card-min-size.
-// O "probe" é um elemento invisível com essa largura, então vale qualquer valor CSS.
 const fittingColumns = ref<number | null>(null)
 
 function measure() {
   const container = containerRef.value
   const minWidth = probeRef.value?.offsetWidth ?? 0
   if (!container || minWidth <= 0) return
-  // column-gap do container não afeta o layout dele; serve só para o navegador converter --gap em px
   const gap = parseFloat(getComputedStyle(container).columnGap) || 0
   fittingColumns.value = Math.max(1, Math.floor((container.clientWidth + gap) / (minWidth + gap)))
 }
@@ -51,11 +46,9 @@ const rows = computed(() => {
   return result
 })
 
-// Roving tabindex: só um card por vez entra na ordem do Tab; as setas movem entre os cards
 const activeIndex = ref(0)
 const tabbableIndex = computed(() => Math.min(activeIndex.value, props.cards.length - 1))
 
-// Troca de categoria: volta para o primeiro card
 watch(
   () => props.cards,
   () => {
@@ -77,7 +70,6 @@ function onFocusIn(event: FocusEvent) {
   if (index >= 0) activeIndex.value = index
 }
 
-// Teclado no padrão ARIA de grade: setas, Home/End na linha, Ctrl+Home/End na grade toda
 function onKeydown(event: KeyboardEvent) {
   const count = props.cards.length
   if (count === 0) return
@@ -112,7 +104,6 @@ function onKeydown(event: KeyboardEvent) {
   focusCard(next)
 }
 
-// Atributos de grupo da varredura para a linha `index` (só na grade principal)
 function rowScanAttrs(index: number) {
   if (!props.scanRows) return {}
   const label = `Linha ${index + 1}`
@@ -177,7 +168,6 @@ function rowScanAttrs(index: number) {
   gap: var(--gap);
 }
 
-/* Todas as linhas usam o mesmo número de colunas, então os cards ficam alinhados */
 .card-grid__row {
   display: grid;
   grid-template-columns: repeat(var(--columns), minmax(0, 1fr));

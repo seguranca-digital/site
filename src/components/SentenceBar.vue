@@ -16,22 +16,18 @@ const largeTextDialogRef = useTemplateRef<InstanceType<typeof LargeTextDialog>>(
 const largeText = ref('')
 const announcement = ref('')
 
-// Sem fala ao tocar, anuncia a palavra adicionada ao leitor de tela via role="status".
-// Com fala ao tocar, não anuncia nada: a voz do app já dá o retorno.
 watch(
   () => sentence.items.length,
   async (length, previousLength) => {
     if (settings.speakOnTap || length <= previousLength) return
     const last = sentence.items[length - 1]
     if (!last) return
-    // Esvazia antes, para que a mesma palavra repetida seja anunciada de novo
     announcement.value = ''
     await nextTick()
     announcement.value = `Adicionado: ${last.label}`
   },
 )
 
-// No celular a frase rola na horizontal: mantém a última palavra à vista
 watch(
   () => sentence.items.length,
   async () => {
@@ -58,7 +54,6 @@ function onSpeak() {
     <h2 id="sentence-bar-title" class="visually-hidden">Frase</h2>
 
     <div class="sentence-bar__phrase">
-      <!-- Focável: no celular a frase rola na horizontal, e pelo teclado se rola com as setas -->
       <ol
         v-if="!sentence.isEmpty"
         ref="items"
@@ -145,15 +140,12 @@ function onSpeak() {
 
     <p role="status" class="visually-hidden">{{ announcement }}</p>
 
-    <!-- Ao fechar, o foco volta para o botão que abriu o diálogo -->
     <LargeTextDialog ref="largeTextDialog" :text="largeText" @close="speakButtonRef?.focus()" />
   </section>
 </template>
 
 <style scoped>
 .sentence-bar {
-  /* Contêiner das consultas @container abaixo. A fonte base acompanha o tamanho do texto
-     das configurações, então as medidas em "em" crescem junto com ele */
   container-type: inline-size;
   display: flex;
   flex-wrap: wrap;
@@ -165,7 +157,6 @@ function onSpeak() {
   background: var(--color-surface);
 }
 
-/* A frase ocupa quase todo o espaço; as ações só vão para a linha de baixo em telas estreitas */
 .sentence-bar__phrase {
   display: flex;
   flex: 999 1 18rem;
@@ -181,7 +172,6 @@ function onSpeak() {
   list-style: none;
 }
 
-/* Pictograma acima do texto, com a faixa da classe no topo, como nos cards */
 .sentence-bar__item {
   display: flex;
   flex-direction: column;
@@ -212,7 +202,6 @@ function onSpeak() {
   gap: var(--gap);
 }
 
-/* Falar: o botão maior e mais destacado */
 .sentence-bar__speak {
   min-height: 4.5rem;
   font-size: calc(1.5rem * var(--font-scale));
@@ -226,18 +215,13 @@ function onSpeak() {
   font-size: calc(1rem * var(--font-scale));
 }
 
-/* Celular: barra mais baixa e de altura estável. As palavras rolam na horizontal em vez de
-   quebrar linha, então a grade de cards não muda de lugar enquanto a frase cresce */
 @media (max-width: 40rem) {
   .sentence-bar {
     gap: var(--space-2);
     padding: var(--space-2);
   }
 
-  /* Altura de uma palavra (faixa, bordas e preenchimento + pictograma + uma linha de texto),
-     para a barra não crescer ao entrar a primeira palavra */
   .sentence-bar__phrase {
-    /* min-width: 0 deixa a frase encolher até a largura da barra, senão ela não rola */
     min-width: 0;
     min-height: calc(3.5rem + 1.5rem * var(--font-scale));
   }
@@ -257,7 +241,6 @@ function onSpeak() {
     width: 2.25rem;
   }
 
-  /* Botões mais baixos (ícone menor, menos preenchimento), sem passar dos 64 px mínimos */
   .sentence-bar__speak,
   .sentence-bar__secondary {
     min-height: 4rem;
@@ -270,8 +253,6 @@ function onSpeak() {
   }
 }
 
-/* Barra estreita (celular ou texto grande): ícone acima do texto em todos os botões,
-   para caberem lado a lado */
 @container (max-width: 23em) {
   .sentence-bar__speak {
     flex-direction: column;
@@ -284,7 +265,6 @@ function onSpeak() {
   }
 }
 
-/* Mais estreita ainda: "Falar" na linha de cima e os outros dois embaixo */
 @container (max-width: 16em) {
   .sentence-bar__actions {
     grid-template-columns: repeat(2, minmax(0, 1fr));

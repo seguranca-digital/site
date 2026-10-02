@@ -5,11 +5,8 @@ import pictogramasMap from '../data/pictogramas-map.json'
 import vocabularioInicial from '../data/vocabulario-inicial.json'
 import { randomId } from '../ids'
 
-// Id da "categoria" fixa das frases rápidas no editor (os cards ficam em board.quickPhraseIds)
 export const QUICK_PHRASES_ID = 'frases-rapidas'
 
-// Associa os pictogramas baixados pelo script (`npm run pictogramas`) aos cards e
-// categorias que ainda não têm imagem definida no vocabulário
 function applyPictogramMap(board: Board, map: Record<string, number>): Board {
   for (const item of [...Object.values(board.cards), ...board.categories]) {
     const pictogramId = map[item.id]
@@ -20,12 +17,10 @@ function applyPictogramMap(board: Board, map: Record<string, number>): Board {
   return board
 }
 
-// Cópia profunda do vocabulário inicial, para que alterações na prancha não modifiquem o JSON importado
 export function createInitialBoard(): Board {
   return applyPictogramMap(structuredClone(vocabularioInicial) as Board, pictogramasMap)
 }
 
-// Move o item de `index` para `index + delta`; retorna false se sair da lista
 function moveInList<T>(list: T[], index: number, delta: number): boolean {
   const target = index + delta
   if (index < 0 || target < 0 || target >= list.length) return false
@@ -47,7 +42,6 @@ export const useBoardStore = defineStore('board', () => {
       null,
   )
 
-  // Converte ids em cards, ignorando ids inexistentes e cards ocultos
   function resolveCards(ids: string[]): Card[] {
     return ids
       .map((id) => board.value.cards[id])
@@ -65,22 +59,17 @@ export const useBoardStore = defineStore('board', () => {
     }
   }
 
-  // --- Editor ---
-
-  // Lista de ids de uma categoria ou das frases rápidas
   function containerCardIds(containerId: string): string[] | undefined {
     if (containerId === QUICK_PHRASES_ID) return board.value.quickPhraseIds
     return board.value.categories.find((category) => category.id === containerId)?.cardIds
   }
 
-  // Todos os cards de uma categoria ou das frases rápidas, inclusive os ocultos
   function cardsOf(containerId: string): Card[] {
     return (containerCardIds(containerId) ?? [])
       .map((id) => board.value.cards[id])
       .filter((card): card is Card => card !== undefined)
   }
 
-  // Categoria (ou frases rápidas) onde o card aparece primeiro
   function containerOf(cardId: string): string | undefined {
     if (board.value.quickPhraseIds.includes(cardId)) return QUICK_PHRASES_ID
     return board.value.categories.find((category) => category.cardIds.includes(cardId))?.id
@@ -116,7 +105,6 @@ export const useBoardStore = defineStore('board', () => {
     if (category && name.trim() !== '') category.name = name.trim()
   }
 
-  // Exclui a categoria e os cards dela, exceto os que também estão em outro lugar
   function deleteCategory(id: string) {
     const index = board.value.categories.findIndex((category) => category.id === id)
     if (index < 0) return
@@ -152,7 +140,6 @@ export const useBoardStore = defineStore('board', () => {
     delete board.value.cards[id]
   }
 
-  // Tira o card de uma categoria e coloca no fim de outra
   function moveCardTo(cardId: string, fromId: string, toId: string) {
     const from = containerCardIds(fromId)
     const to = containerCardIds(toId)

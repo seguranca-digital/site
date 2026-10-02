@@ -12,7 +12,6 @@ interface ArasaacApiResult {
   keywords?: { keyword: string }[]
 }
 
-// Busca de pictogramas no ARASAAC (precisa de internet), para o editor
 export function useArasaac() {
   const results = ref<ArasaacResult[]>([])
   const status = ref<'idle' | 'loading' | 'done' | 'empty' | 'error'>('idle')
@@ -40,12 +39,10 @@ export function useArasaac() {
     }
   }
 
-  // Miniatura para a grade de resultados
   function thumbnailUrl(id: number): string {
     return `https://static.arasaac.org/pictograms/${id}/${id}_300.png`
   }
 
-  // PNG em tamanho normal, para guardar no aparelho e funcionar offline
   async function download(id: number): Promise<Blob> {
     const response = await fetch(`${API}/pictograms/${id}?download=false`)
     if (!response.ok) throw new Error(`HTTP ${response.status}`)

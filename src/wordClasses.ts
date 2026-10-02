@@ -1,6 +1,5 @@
 import type { WordClass } from './types'
 
-// Classes gramaticais com o nome da cor (Chave de Fitzgerald adaptada), na ordem do editor
 export const WORD_CLASSES: { value: WordClass; label: string }[] = [
   { value: 'pessoa', label: 'Pessoa (amarelo)' },
   { value: 'acao', label: 'Ação (verde)' },

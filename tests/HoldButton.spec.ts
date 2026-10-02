@@ -14,7 +14,6 @@ describe('HoldButton', () => {
     return mount(HoldButton, { slots: { default: 'Desligar' } })
   }
 
-  // O jsdom não tem PointerEvent; um MouseEvent com o mesmo nome basta para o componente
   async function pointerDown(wrapper: ReturnType<typeof setup>, clientX: number) {
     wrapper.element.dispatchEvent(new MouseEvent('pointerdown', { clientX, bubbles: true }))
     await wrapper.vm.$nextTick()
@@ -28,7 +27,6 @@ describe('HoldButton', () => {
     vi.advanceTimersByTime(1)
     expect(wrapper.emitted('complete')).toHaveLength(1)
 
-    // Soltar depois de completar não emite mais nada
     await wrapper.trigger('pointerup')
     expect(wrapper.emitted('release')).toBeUndefined()
   })

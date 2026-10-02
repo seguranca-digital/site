@@ -6,7 +6,6 @@ import App from '../src/App.vue'
 import { useSettingsStore } from '../src/stores/settingsStore'
 import SettingsView from '../src/views/SettingsView.vue'
 
-// Web Speech API simulada, com vozes em vários idiomas (antes de importar o useSpeech)
 const synth = vi.hoisted(() => {
   class FakeUtterance {
     lang = ''
@@ -44,7 +43,6 @@ const synth = vi.hoisted(() => {
   return fake
 })
 
-// O jsdom não implementa <dialog>.showModal(): simulação mínima para o ConfirmDialog
 beforeAll(() => {
   HTMLDialogElement.prototype.showModal = function () {
     this.setAttribute('open', '')
@@ -177,7 +175,6 @@ describe('SettingsView', () => {
     const dialog = wrapper.find('dialog')
     expect(dialog.attributes('open')).toBeDefined()
 
-    // Cancelar não muda nada
     await findButton(wrapper, 'Cancelar').trigger('click')
     await flushPromises()
     expect(settings.theme).toBe('escuro')

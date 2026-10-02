@@ -1,15 +1,3 @@
-// Baixa do ARASAAC os pictogramas do vocabulário inicial, para uso offline.
-//
-// Uso:
-//   npm run pictogramas                 → busca só o que ainda não está no mapa
-//   npm run pictogramas -- --atualizar  → refaz todas as buscas (útil depois de mudar labels
-//                                          ou searchTerms); PNGs que já existem não são baixados de novo
-//
-// Para cada card e categoria: usa `arasaacId` se houver; se não, busca `searchTerm ?? label`
-// (ou `searchTerm ?? name`, nas categorias) e pega o primeiro resultado. Salva o PNG em
-// public/pictogramas/{id}.png e grava { id do card/categoria: id do ARASAAC } em
-// src/data/pictogramas-map.json. No fim, apaga os PNGs que nenhum item usa mais.
-
 import { access, mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises'
 
 const API = 'https://api.arasaac.org/v1'
@@ -36,7 +24,6 @@ async function readJson(url, fallback) {
   return (await exists(url)) ? JSON.parse(await readFile(url, 'utf8')) : fallback
 }
 
-// Retorna o _id do primeiro resultado, ou undefined se a busca não encontrar nada
 async function search(term) {
   await sleep(DELAY_MS)
   const response = await fetch(`${API}/pictograms/br/search/${encodeURIComponent(term)}`)
@@ -84,7 +71,6 @@ for (const entry of entries) {
     let pictogramId = entry.arasaacId ?? (refresh ? undefined : previousMap[entry.id])
     if (pictogramId === undefined) {
       searched++
-      // Se a nova busca falhar, mantém o pictograma anterior (se houver)
       pictogramId = (await search(entry.term)) ?? previousMap[entry.id]
     }
     if (pictogramId === undefined) {
@@ -106,8 +92,6 @@ for (const entry of entries) {
 
 await writeFile(mapUrl, JSON.stringify(map, null, 2) + '\n')
 
-// Apaga PNGs que nenhum item usa mais (ex.: depois de trocar um arasaacId).
-// Com falhas de rede o mapa pode estar incompleto, então não apaga nada.
 const removed = []
 if (failures.length === 0) {
   const usedFiles = new Set(Object.values(map).map((pictogramId) => `${pictogramId}.png`))

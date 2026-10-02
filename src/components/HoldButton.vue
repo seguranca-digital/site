@@ -1,13 +1,9 @@
 <script setup lang="ts">
 import { onBeforeUnmount, ref } from 'vue'
 
-// Botão que só é acionado se ficar pressionado por `durationMs` (padrão 2 s), com indicador
-// de progresso. Serve para ações que o usuário principal não deve disparar sem querer.
-// Funciona com toque/mouse e com teclado (segurando Enter ou Espaço).
 const props = withDefaults(defineProps<{ durationMs?: number }>(), { durationMs: 2000 })
 const emit = defineEmits<{
   complete: []
-  // Soltou antes do tempo: quanto tempo segurou e onde (null no teclado)
   release: [heldMs: number, clientX: number | null]
 }>()
 
@@ -44,7 +40,6 @@ function complete() {
   emit('complete')
 }
 
-// Soltou antes de completar; `cancelled` quando o navegador interrompeu o toque
 function end(cancelled = false) {
   if (!holding) return
   const heldMs = performance.now() - startedAt
@@ -52,7 +47,6 @@ function end(cancelled = false) {
   if (!cancelled) emit('release', heldMs, startX)
 }
 
-// O botão cuida do próprio toque: não repassa para quem estiver em volta
 function onPointerDown(event: PointerEvent) {
   event.stopPropagation()
   ;(event.currentTarget as HTMLElement).setPointerCapture?.(event.pointerId)
@@ -75,7 +69,6 @@ function isHoldKey(event: KeyboardEvent): boolean {
 
 function onKeyDown(event: KeyboardEvent) {
   if (!isHoldKey(event)) return
-  // Evita o clique nativo; o keydown repetido enquanto a tecla está segurada é ignorado
   event.preventDefault()
   if (!event.repeat) start(null)
 }
@@ -116,15 +109,12 @@ onBeforeUnmount(reset)
 .hold-button {
   position: relative;
   overflow: hidden;
-  /* Toque longo não pode abrir menu nem selecionar texto */
   touch-action: none;
   user-select: none;
   -webkit-user-select: none;
   -webkit-touch-callout: none;
 }
 
-/* Barra de progresso na base do botão, controlada por JS (não é animação CSS,
-   então continua visível com prefers-reduced-motion) */
 .hold-button__progress {
   position: absolute;
   inset: auto 0 0;

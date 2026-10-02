@@ -37,7 +37,6 @@ async function exportBackup() {
 async function importBackup(event: Event) {
   const input = event.target as HTMLInputElement
   const file = input.files?.[0]
-  // Limpa o campo para poder escolher o mesmo arquivo de novo
   input.value = ''
   if (!file) return
   error.value = ''

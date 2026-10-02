@@ -6,7 +6,6 @@ import { useSettingsStore } from './stores/settingsStore'
 const route = useRoute()
 const settings = useSettingsStore()
 
-// Tema e tamanho do texto valem para o app inteiro e mudam na hora (tokens em styles/)
 watchEffect(() => {
   const root = document.documentElement
   root.dataset.theme = settings.theme
@@ -18,7 +17,6 @@ watchEffect(() => {
   <main>
     <RouterView />
   </main>
-  <!-- Na própria tela Sobre o link seria redundante -->
   <footer v-if="route.name !== 'about'" class="app-footer">
     <RouterLink to="/sobre" class="app-footer__link">Sobre e créditos</RouterLink>
   </footer>

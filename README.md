@@ -3,7 +3,6 @@
 Comunicador por pictogramas **gratuito**, que roda no navegador de qualquer celular, tablet ou computador, **funciona sem internet**, fala as frases em voz alta e tem **modo de varredura** para quem usa um único botão (acionador).
 
 - **App publicado:** https://seguranca-digital.github.io/site/
-- **Vídeo demonstrativo (até 5 min):** _adicionar o link_
 
 Trabalho da disciplina de **Tecnologias Assistivas**: um MVP digital de baixo custo, construído com co-design, para uma demanda funcional real.
 
@@ -25,8 +24,6 @@ O app atende dois públicos:
 O MVP é o ponto de partida das sessões de co-design com usuários e parceiros de comunicação. Por isso, todo o vocabulário (cards, categorias e frases rápidas) fica em JSON ([`src/data/vocabulario-inicial.json`](src/data/vocabulario-inicial.json)), e o parceiro pode ajustar a prancha pelo próprio app, sem mexer no código.
 
 Cada sessão é registrada em [`docs/co-design.md`](docs/co-design.md), com os participantes identificados só por papel ou código, as tarefas propostas, as dificuldades observadas e as mudanças que resultaram delas.
-
-_Resumo das sessões: preencher depois das sessões._
 
 ## Funcionalidades
 
@@ -169,7 +166,3 @@ O endereço fica `https://<usuário-ou-organização>.github.io/<nome-do-reposit
 - **Pictogramas:**
 
   > Os símbolos pictográficos utilizados são propriedade do Governo de Aragão e foram criados por Sergio Palao para a ARASAAC (https://arasaac.org), que os distribui sob uma licença Creative Commons (BY-NC-SA).
-
-## Equipe
-
-_Adicionar os nomes e papéis dos integrantes._

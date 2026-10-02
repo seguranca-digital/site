@@ -26,7 +26,6 @@ import { RouterLink } from 'vue-router'
     </p>
 
     <h2>Créditos</h2>
-    <!-- Texto de crédito obrigatório do ARASAAC: manter exatamente assim -->
     <p class="about__credits">
       Os símbolos pictográficos utilizados são propriedade do Governo de Aragão e foram criados por Sergio Palao para a ARASAAC (<a href="https://arasaac.org">https://arasaac.org</a>), que os distribui sob uma licença Creative Commons (BY-NC-SA).
     </p>

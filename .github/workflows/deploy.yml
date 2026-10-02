@@ -1,5 +1,3 @@
-# Publica o app no GitHub Pages a cada push na main.
-# Passo manual (uma vez): Settings → Pages → Source: GitHub Actions
 name: Deploy no GitHub Pages
 
 on:
@@ -12,7 +10,6 @@ permissions:
   pages: write
   id-token: write
 
-# Um deploy por vez; não cancela um deploy que já está em andamento
 concurrency:
   group: pages
   cancel-in-progress: false
@@ -32,7 +29,6 @@ jobs:
 
       - run: npm run test
 
-      # O app fica em https://<usuário>.github.io/<repositório>/
       - run: npm run build
         env:
           BASE_PATH: /${{ github.event.repository.name }}/

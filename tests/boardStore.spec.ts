@@ -29,7 +29,6 @@ describe('boardStore — editor', () => {
   it('excluir categoria exclui os cards dela, mas mantém os que estão em outro lugar', () => {
     const store = useBoardStore()
     const pessoas = store.board.categories.find((category) => category.id === 'pessoas')!
-    // "eu" também passa a estar nas frases rápidas
     store.board.quickPhraseIds.push('eu')
     store.selectCategory('pessoas')
 
@@ -38,7 +37,6 @@ describe('boardStore — editor', () => {
     expect(store.board.cards.eu).toBeDefined()
     expect(store.board.cards.mae).toBeUndefined()
     expect(pessoas.cardIds.every((id) => id === 'eu' || !(id in store.board.cards))).toBe(true)
-    // A categoria ativa volta para a primeira que sobrou
     expect(store.activeCategory?.id).toBe('acoes')
   })
 
@@ -58,7 +56,6 @@ describe('boardStore — editor', () => {
     store.updateCard('agua', { label: 'Água', speech: 'quero água', hidden: true })
     expect(store.board.cards.agua).toMatchObject({ label: 'Água', speech: 'quero água', hidden: true })
 
-    // Oculto: some da prancha, mas continua no editor
     store.selectCategory('comida-e-bebida')
     expect(store.activeCards.some((card) => card.id === 'agua')).toBe(false)
     expect(store.cardsOf('comida-e-bebida').some((card) => card.id === 'agua')).toBe(true)

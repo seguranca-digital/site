@@ -7,7 +7,6 @@ import EditorCategoryList from '../components/EditorCategoryList.vue'
 import { QUICK_PHRASES_ID } from '../stores/boardStore'
 import '../styles/editor.css'
 
-// Modo do parceiro de comunicação: categorias à esquerda, cards da categoria aberta à direita
 const selectedId = ref(QUICK_PHRASES_ID)
 const cardListRef = useTemplateRef<InstanceType<typeof EditorCardList>>('cardList')
 </script>
@@ -49,7 +48,6 @@ const cardListRef = useTemplateRef<InstanceType<typeof EditorCardList>>('cardLis
   gap: var(--space-6);
 }
 
-/* Telas largas: duas colunas */
 @media (min-width: 56rem) {
   .editor__columns {
     grid-template-columns: minmax(18rem, 1fr) minmax(0, 1.6fr);
