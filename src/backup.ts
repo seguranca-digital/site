@@ -7,7 +7,6 @@ import {
 import type { Board, Card, Category, PictogramSource, Settings } from './types'
 import { isWordClass } from './wordClasses'
 
-// Arquivo de backup: leva a prancha, as imagens (base64) e as configurações de um aparelho para outro
 export const BACKUP_FORMAT = 'comunicador-alternativo-backup'
 export const BACKUP_VERSION = 1
 
@@ -16,7 +15,6 @@ export interface BackupFile {
   version: typeof BACKUP_VERSION
   exportedAt: string
   board: Board
-  // Chave da imagem → data URL (ex.: "foto:abc" → "data:image/jpeg;base64,...")
   images: Record<string, string>
   settings: Settings
 }
@@ -69,7 +67,6 @@ function categoryError(value: unknown, index: number): string | null {
   return null
 }
 
-// Confere a estrutura completa da prancha (também usada ao carregar do IndexedDB)
 export function validateBoard(value: unknown): ValidationResult<Board> {
   if (!isRecord(value)) return { ok: false, error: 'a prancha não é um objeto' }
   if (value.version !== 1) return { ok: false, error: `versão da prancha não suportada (${String(value.version)})` }
@@ -102,7 +99,6 @@ export function validateBoard(value: unknown): ValidationResult<Board> {
   return { ok: true, value: value as unknown as Board }
 }
 
-// Configurações: aproveita só os campos com o tipo certo; o resto fica no padrão
 export function sanitizeSettings(value: unknown): Settings {
   const settings = createDefaultSettings()
   if (!isRecord(value)) return settings
@@ -119,18 +115,15 @@ export function sanitizeSettings(value: unknown): Settings {
   }
   copyMatching(settings as unknown as UnknownRecord, value)
 
-  // Campos com valores fixos
   const defaults = createDefaultSettings()
   if (!THEMES.includes(settings.theme)) settings.theme = defaults.theme
   if (!['automatica', 'dois-botoes'].includes(settings.scanning.mode)) {
     settings.scanning.mode = defaults.scanning.mode
   }
 
-  // Números: dentro da faixa da tela de configurações e no passo dela (ex.: colunas inteiras)
   const limit = (value: number, fallback: number, { min, max, step }: NumberLimits) => {
     if (!Number.isFinite(value)) return fallback
     const stepped = min + Math.round((value - min) / step) * step
-    // Arredonda para evitar 0.30000000000000004
     return Math.min(max, Math.max(min, Number(stepped.toFixed(4))))
   }
   settings.rate = limit(settings.rate, defaults.rate, SETTINGS_LIMITS.rate)
@@ -190,7 +183,6 @@ export function validateBackup(value: unknown): ValidationResult<BackupFile> {
   }
 }
 
-// Lê o texto de um arquivo .json escolhido pelo usuário
 export function parseBackup(text: string): ValidationResult<BackupFile> {
   let data: unknown
   try {

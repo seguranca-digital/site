@@ -6,8 +6,6 @@ import { isBundledPictogram, resizeImage } from '../images'
 import type { PictogramSource } from '../types'
 import PictogramImage from './PictogramImage.vue'
 
-// Imagem escolhida no editor. `blob` vem preenchido quando a imagem ainda precisa ser
-// guardada no aparelho (pictograma baixado agora ou foto); é salva só ao salvar o card.
 export interface ImageChoice {
   picto: PictogramSource
   blob: Blob | null
@@ -23,7 +21,6 @@ const term = ref('')
 const message = ref('')
 const { results, status, search, thumbnailUrl, download } = useArasaac()
 
-// Prévia de uma imagem nova, que ainda não está no aparelho
 const previewUrl = ref<string | null>(null)
 watch(
   () => choice.value.blob,
@@ -60,7 +57,6 @@ async function runSearch() {
 
 async function chooseArasaac(result: ArasaacResult) {
   const picto: PictogramSource = { kind: 'arasaac', id: result.id }
-  // Pictogramas que já vêm com o app não precisam ser baixados de novo
   if (isBundledPictogram(result.id)) {
     choice.value = { picto, blob: null }
     message.value = `Escolhido: ${result.keyword}.`
@@ -78,7 +74,6 @@ async function chooseArasaac(result: ArasaacResult) {
 async function onFile(event: Event) {
   const input = event.target as HTMLInputElement
   const file = input.files?.[0]
-  // Limpa o campo para poder escolher o mesmo arquivo de novo
   input.value = ''
   if (!file) return
   message.value = 'Preparando a imagem…'
@@ -132,7 +127,6 @@ function chooseNone() {
       <button type="button" class="btn btn--small" @click="chooseNone">Sem imagem</button>
     </div>
 
-    <!-- Sem <form> aqui: o picker fica dentro do formulário do card -->
     <div v-if="mode === 'arasaac'" class="image-picker__panel">
       <div class="field">
         <label :for="termId">Palavra para buscar</label>
@@ -278,7 +272,6 @@ function chooseNone() {
   background: var(--color-picto-bg);
 }
 
-/* Escolhido: borda grossa e fundo diferente, não só a cor */
 .image-picker__result[aria-pressed='true'] {
   border-width: 0.25rem;
   border-color: var(--color-selected);

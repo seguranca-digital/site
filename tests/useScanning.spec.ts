@@ -86,7 +86,6 @@ describe('useScanning', () => {
     scanning.start()
     vi.advanceTimersByTime(INTERVAL - 100)
     scanning.press()
-    // O item recém-destacado fica o intervalo inteiro antes de avançar
     vi.advanceTimersByTime(INTERVAL - 1)
     expect(scanning.highlightedId.value).toBe('falar')
     vi.advanceTimersByTime(1)
@@ -116,7 +115,6 @@ describe('useScanning', () => {
     expect(scanning.isPaused.value).toBe(true)
     expect(scanning.highlightedId.value).toBeNull()
 
-    // Pausada, não avança mais
     vi.advanceTimersByTime(10 * INTERVAL)
     expect(scanning.highlightedId.value).toBeNull()
 
@@ -130,7 +128,6 @@ describe('useScanning', () => {
     const { scanning } = setup()
     scanning.start()
     scanning.press()
-    // Grupo "acoes": falar, limpar, Voltar → 3 passos por volta
     vi.advanceTimersByTime(3 * 3 * INTERVAL)
     expect(scanning.isPaused.value).toBe(true)
     scanning.press()
@@ -179,7 +176,6 @@ describe('useScanning', () => {
     vi.advanceTimersByTime(2 * INTERVAL)
     expect(scanning.highlightedId.value).toBe('linha-2')
 
-    // Trocou de categoria: agora a grade tem uma linha só, e há um grupo vazio
     structure.value = {
       groups: [
         { id: 'vazio', itemIds: [] },
@@ -243,7 +239,6 @@ describe('createPressFilter (tempo de aceitação)', () => {
     filter.up()
     expect(onAccept).toHaveBeenCalledOnce()
 
-    // Um novo toque, depois de soltar, vale de novo
     filter.down()
     vi.advanceTimersByTime(300)
     expect(onAccept).toHaveBeenCalledTimes(2)

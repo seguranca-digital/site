@@ -21,7 +21,6 @@ const emit = defineEmits<{ select: [card: Card] }>()
 
 <style scoped>
 .quick-phrases {
-  /* Rótulos curtos: cabem 4 por linha em celulares; pictogramas menores para a linha ocupar pouca altura */
   --card-min-size: calc(4.5rem * var(--font-scale));
   --picto-size: 3rem;
   padding: var(--space-2);
@@ -29,8 +28,6 @@ const emit = defineEmits<{ select: [card: Card] }>()
   background: var(--color-surface-alt);
 }
 
-/* Celular: pictogramas e preenchimento menores, para as duas linhas de frases rápidas
-   ocuparem menos altura */
 @media (max-width: 40rem) {
   .quick-phrases {
     --picto-size: 2.25rem;

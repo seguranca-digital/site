@@ -1,5 +1,3 @@
-// Id aleatório para cards, categorias e fotos.
-// randomUUID só existe em contexto seguro (https ou localhost); no celular pela rede local, usa o reserva.
 export function randomId(prefix: string): string {
   const random =
     globalThis.crypto?.randomUUID?.() ??

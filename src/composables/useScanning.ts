@@ -11,29 +11,19 @@ export interface ScanStructure {
 
 export type ScanLevel = 'group' | 'item'
 
-// Item virtual "↩ Voltar": sempre o último de cada grupo no nível 2
 export const BACK_ITEM_ID = 'scan:voltar'
 
 export interface ScanningOptions {
-  // Lida de novo a cada passo, porque os grupos mudam (ex.: linhas da grade ao trocar de categoria)
   structure: MaybeRefOrGetter<ScanStructure>
   intervalMs: MaybeRefOrGetter<number>
-  // Voltas sem seleção antes de pausar; 0 nunca pausa
   loopsBeforePause: MaybeRefOrGetter<number>
-  // false no modo dois botões: sem timer, o destaque só anda com advance()
   automatic: MaybeRefOrGetter<boolean>
   onSelect: (groupId: string, itemId: string) => void
 }
 
-/**
- * Máquina de estados da varredura em dois níveis, sem acesso ao DOM.
- * Nível 1 percorre os grupos; ao selecionar um grupo, o nível 2 percorre os itens
- * dele e termina em "Voltar". Selecionar um item chama `onSelect` e volta ao nível 1.
- */
 export function useScanning(options: ScanningOptions) {
   const level = ref<ScanLevel>('group')
   const highlightedId = ref<string | null>(null)
-  // Grupo destacado (nível 1) ou aberto (nível 2)
   const highlightedGroupId = ref<string | null>(null)
   const isRunning = ref(false)
   const isPaused = ref(false)
@@ -54,7 +44,6 @@ export function useScanning(options: ScanningOptions) {
     loops = 0
   }
 
-  // Atualiza o destaque a partir dos índices, corrigindo-os se a estrutura mudou
   function updateHighlight() {
     const list = groups()
     if (level.value === 'item') {
@@ -111,7 +100,6 @@ export function useScanning(options: ScanningOptions) {
     highlightedGroupId.value = null
   }
 
-  // Passa o destaque para o próximo grupo ou item (timer ou acionador "avançar")
   function advance() {
     if (!isRunning.value || isPaused.value) return
     const count =
@@ -135,7 +123,6 @@ export function useScanning(options: ScanningOptions) {
     schedule()
   }
 
-  // Acionador "selecionar": abre o grupo, executa o item ou retoma a varredura pausada
   function press() {
     if (!isRunning.value) return
     if (isPaused.value) {
@@ -148,7 +135,6 @@ export function useScanning(options: ScanningOptions) {
       itemIndex = 0
       loops = 0
     } else if (highlightedId.value === BACK_ITEM_ID) {
-      // Volta ao nível 1 no mesmo grupo
       goToGroups(groupIndex)
     } else if (highlightedId.value !== null && highlightedGroupId.value !== null) {
       const selected = { groupId: highlightedGroupId.value, itemId: highlightedId.value }
@@ -179,11 +165,6 @@ export interface PressFilter {
   up: () => void
 }
 
-/**
- * Tempo de aceitação: o acionamento só vale se a tecla ou o toque ficar pressionado
- * por pelo menos `acceptanceMs` (filtra toques acidentais e tremores). Com 0, vale no
- * momento em que é pressionado. Um novo `down` antes do `up` (tecla repetida) é ignorado.
- */
 export function createPressFilter(
   acceptanceMs: MaybeRefOrGetter<number>,
   onAccept: () => void,

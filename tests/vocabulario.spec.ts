@@ -2,7 +2,6 @@ import { describe, expect, it } from 'vitest'
 import { createInitialBoard } from '../src/stores/boardStore'
 import type { WordClass } from '../src/types'
 
-// O vocabulário muda nas sessões de co-design; estes testes pegam erros de digitação no JSON
 const wordClasses: WordClass[] = [
   'pessoa', 'acao', 'coisa', 'descricao', 'social', 'pergunta', 'negacao', 'outro',
 ]
@@ -38,7 +37,6 @@ describe('vocabulario-inicial.json', () => {
     expect(new Set(ids).size).toBe(ids.length)
   })
 
-  // Cards e categorias dividem o mesmo pictogramas-map.json
   it('ids de categoria não coincidem com ids de card', () => {
     for (const category of board.categories) {
       expect(board.cards[category.id], category.id).toBeUndefined()

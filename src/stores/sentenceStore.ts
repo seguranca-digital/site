@@ -7,7 +7,6 @@ export const useSentenceStore = defineStore('sentence', () => {
 
   const isEmpty = computed(() => items.value.length === 0)
 
-  // Texto a ser falado: junta `speech ?? label` de cada card com espaço
   const text = computed(() =>
     items.value
       .map((card) => (card.speech ?? card.label).trim())

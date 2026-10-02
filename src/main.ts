@@ -9,5 +9,4 @@ import './styles/base.css'
 
 const app = createApp(App).use(createPinia()).use(router)
 
-// Carrega a prancha e as configurações salvas neste aparelho antes de mostrar a tela
 setupPersistence().finally(() => app.mount('#app'))

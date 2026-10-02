@@ -20,7 +20,6 @@ const { speak, isSupported } = useSpeech()
 const router = useRouter()
 const scanToggleRef = useTemplateRef<HTMLButtonElement>('scanToggle')
 
-// Tocar em um card: adiciona à frase e, se configurado, fala a palavra
 function selectCard(card: Card) {
   sentence.add(card)
   if (settings.speakOnTap) speak(card.speech ?? card.label)
@@ -30,7 +29,6 @@ function toggleScanning() {
   settings.scanning.enabled = !settings.scanning.enabled
 }
 
-// Ao desligar a varredura, o foco volta para o botão que a liga
 watch(
   () => settings.scanning.enabled,
   async (enabled) => {
@@ -63,8 +61,6 @@ watch(
         </svg>
         Varredura
       </button>
-      <!-- Entradas protegidas: segurar 2 s, para o usuário principal não abrir o editor nem as
-           configurações sem querer -->
       <HoldButton class="board__tool" @complete="router.push('/editor')">
         <svg class="btn__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
           <circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="2" />
@@ -134,7 +130,6 @@ watch(
   padding: var(--space-3);
 }
 
-/* Espaço para a barra inferior da varredura não cobrir a última linha de cards */
 .board--scanning {
   padding-bottom: calc(var(--scan-bar-height) + var(--space-6));
 }
@@ -148,7 +143,6 @@ watch(
 
 .board__tool {
   min-height: 2.75rem;
-  /* Espaçamento lateral pequeno: em celulares de 320 px, dois botões cabem por linha */
   padding: var(--space-1) var(--space-2);
 }
 
@@ -158,7 +152,6 @@ watch(
   color: var(--color-selected-text);
 }
 
-/* Celular: menos espaço entre as regiões, para a grade de cards aparecer sem rolar a tela */
 @media (max-width: 40rem) {
   .board {
     gap: var(--space-2);
@@ -166,8 +159,6 @@ watch(
   }
 }
 
-/* Tela estreita: os botões do parceiro ficam só com o ícone, para a barra caber em uma linha.
-   O texto sai da tela, mas continua sendo o nome acessível do botão */
 @media (max-width: 30rem) {
   .board__tool-label {
     position: absolute;

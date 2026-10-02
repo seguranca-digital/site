@@ -5,7 +5,6 @@ export interface ConfirmOptions {
   title: string
   message: string
   confirmLabel: string
-  // Ação destrutiva: botão vermelho
   danger?: boolean
 }
 
@@ -18,7 +17,6 @@ const options = ref<ConfirmOptions>({ title: '', message: '', confirmLabel: 'Con
 let resolveAnswer: ((confirmed: boolean) => void) | undefined
 let returnFocus: HTMLElement | null = null
 
-// Abre a confirmação; resolve true se confirmou, false se cancelou (inclusive com Esc)
 function ask(next: ConfirmOptions): Promise<boolean> {
   const dialog = dialogRef.value
   if (!dialog) return Promise.resolve(false)
@@ -26,7 +24,6 @@ function ask(next: ConfirmOptions): Promise<boolean> {
   returnFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null
   dialog.returnValue = ''
   dialog.showModal()
-  // O foco começa em "Cancelar": confirmar sem querer é o pior caso
   cancelRef.value?.focus()
   return new Promise((resolve) => {
     resolveAnswer = resolve
@@ -40,7 +37,6 @@ function finish(confirmed: boolean) {
 function onClose() {
   resolveAnswer?.(dialogRef.value?.returnValue === 'confirmar')
   resolveAnswer = undefined
-  // Devolve o foco para quem abriu (se o elemento ainda existir)
   if (returnFocus?.isConnected) returnFocus.focus()
   returnFocus = null
 }

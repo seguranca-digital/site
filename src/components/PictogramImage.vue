@@ -5,14 +5,9 @@ import { bundledPictogramUrl, isBundledPictogram, storedImageKey } from '../imag
 import type { PictogramSource } from '../types'
 
 const props = defineProps<{ picto: PictogramSource }>()
-// Avisa quando a imagem não pode ser exibida (ex.: para o card mostrar o texto mesmo com os
-// rótulos ocultos)
 const emit = defineEmits<{ failed: [value: boolean] }>()
 
-// De onde vem a imagem: pictogramas do app ficam em public/pictogramas; os escolhidos no
-// editor e as fotos ficam no IndexedDB; sem cópia local, tenta o ARASAAC online
 const src = ref<string | null>(null)
-// Se a imagem não carregar, quem usa o componente continua funcionando só com o texto
 const failed = ref(false)
 let request = 0
 
@@ -31,14 +26,12 @@ watch(
       return
     }
     const url = await imageUrl(key)
-    // Ignora respostas antigas, se a imagem mudou enquanto carregava
     if (current !== request) return
     src.value =
       url ??
       (picto.kind === 'arasaac'
         ? `https://api.arasaac.org/v1/pictograms/${picto.id}?download=false`
         : null)
-    // Foto apagada do aparelho: não há de onde carregar
     if (src.value === null) failed.value = true
   },
   { immediate: true, deep: true },
@@ -48,7 +41,6 @@ watch(failed, (value) => emit('failed', value))
 </script>
 
 <template>
-  <!-- alt vazio: o nome do botão já é o texto; assim o leitor de tela não lê a palavra duas vezes -->
   <img
     v-if="src && !failed"
     class="pictogram"
@@ -70,7 +62,6 @@ watch(failed, (value) => emit('failed', value))
   aspect-ratio: 1;
   object-fit: contain;
   border-radius: var(--radius-small);
-  /* Fundo claro em todos os temas: o traço preto do pictograma some sobre fundo escuro */
   background: var(--color-picto-bg);
   -webkit-user-drag: none;
 }

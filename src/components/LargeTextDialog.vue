@@ -18,7 +18,6 @@ defineExpose({ open })
 </script>
 
 <template>
-  <!-- Modo "frase em texto grande": usado quando o navegador não fala, para o parceiro ler na tela -->
   <dialog
     ref="dialog"
     class="large-text-dialog"
@@ -44,7 +43,6 @@ defineExpose({ open })
   color: var(--color-text);
 }
 
-/* Cor literal: o ::backdrop não herda as variáveis do :root em navegadores mais antigos */
 .large-text-dialog::backdrop {
   background: rgb(0 0 0 / 0.6);
 }

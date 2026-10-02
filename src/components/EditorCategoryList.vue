@@ -5,9 +5,7 @@ import type { Category } from '../types'
 import ConfirmDialog from './ConfirmDialog.vue'
 import PictogramImage from './PictogramImage.vue'
 
-// Categoria (ou frases rápidas) aberta na lista de cards ao lado
 const selected = defineModel<string>('selected', { required: true })
-// Avisa quando o parceiro abre uma categoria (para levar o foco até os cards dela)
 const emit = defineEmits<{ open: [] }>()
 
 function open(id: string) {
@@ -42,7 +40,6 @@ async function move(category: Category, delta: number) {
   if (!boardStore.moveCategory(category.id, delta)) return
   const position = boardStore.board.categories.indexOf(category) + 1
   announcement.value = `${category.name}: posição ${position} de ${boardStore.board.categories.length}.`
-  // A lista é redesenhada; o foco volta para o mesmo botão
   await focusInList(`[data-move="${delta < 0 ? 'up' : 'down'}-${category.id}"]`)
 }
 

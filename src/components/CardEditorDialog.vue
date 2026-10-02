@@ -19,7 +19,6 @@ const dialogRef = useTemplateRef<HTMLDialogElement>('dialog')
 const labelRef = useTemplateRef<HTMLInputElement>('label')
 const confirmRef = useTemplateRef<InstanceType<typeof ConfirmDialog>>('confirm')
 
-// null = card novo
 const cardId = ref<string | null>(null)
 const originalContainerId = ref('')
 const form = reactive({
@@ -96,7 +95,6 @@ async function save() {
   const speech = form.speech.trim()
   const data = {
     label,
-    // Só guarda o texto falado se ele for diferente do exibido
     speech: speech !== '' && speech !== label ? speech : undefined,
     wordClass: form.wordClass,
     hidden: form.hidden || undefined,
@@ -105,7 +103,6 @@ async function save() {
 
   isSaving.value = true
   try {
-    // A imagem nova vai para o aparelho antes do card passar a usá-la
     const key = storedImageKey(image.value.picto)
     if (image.value.blob && key) await saveImage(key, image.value.blob)
   } catch {

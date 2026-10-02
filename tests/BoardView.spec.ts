@@ -18,8 +18,6 @@ function createTestRouter() {
   })
 }
 
-// O jsdom não tem Web Speech API: simula antes de importar os módulos,
-// porque o useSpeech detecta o suporte ao ser carregado
 const synth = vi.hoisted(() => {
   class FakeUtterance {
     lang = ''
@@ -75,7 +73,6 @@ describe('BoardView', () => {
     await findButton(wrapper, 'Comida e bebida').trigger('click')
     await findButton(wrapper, 'água').trigger('click')
 
-    // speakOnTap ligado por padrão: cada card é falado ao ser tocado
     expect(spokenTexts()).toEqual(['eu', 'quero', 'água'])
     expect(sentenceLabels(wrapper)).toEqual(['eu', 'quero', 'água'])
 
@@ -87,7 +84,6 @@ describe('BoardView', () => {
     const [utterance] = synth.speak.mock.calls[0]!
     expect(utterance.lang).toBe('pt-BR')
     expect(utterance.rate).toBe(0.9)
-    // cancela a fala anterior antes de falar, para não enfileirar
     expect(synth.cancel).toHaveBeenCalledBefore(synth.speak)
   })
 
@@ -122,7 +118,6 @@ describe('BoardView', () => {
     const tablist = () => wrapper.find('[role="tablist"]')
     expect(tablist().classes()).toContain('category-tabs__list--scroll')
 
-    // O halo do destaque da varredura seria cortado pela rolagem: as abas voltam a quebrar linha
     useSettingsStore().scanning.enabled = true
     await nextTick()
     expect(tablist().classes()).not.toContain('category-tabs__list--scroll')
@@ -252,7 +247,6 @@ describe('BoardView com varredura', () => {
     await keyUp(key)
   }
 
-  // O jsdom não tem PointerEvent; um MouseEvent com o mesmo nome basta
   async function tap(selector: string, clientX = 900) {
     const target = document.querySelector(selector)!
     target.dispatchEvent(new MouseEvent('pointerdown', { clientX, bubbles: true }))
@@ -265,14 +259,12 @@ describe('BoardView com varredura', () => {
     await flush()
   }
 
-  // Id do grupo ou item destacado
   function highlight(): string | null {
     const element = document.querySelector<HTMLElement>('[data-scan-highlight]')
     if (!element) return null
     return element.dataset.scanGroup ?? element.dataset.scanItem ?? element.textContent!.trim()
   }
 
-  // Espera, sem acionar nada, o destaque chegar em `target`
   async function waitFor(target: string) {
     for (let step = 0; step < 20; step++) {
       if (highlight() === target) return
@@ -295,16 +287,13 @@ describe('BoardView com varredura', () => {
   it('monta e fala "eu quero água" usando só a barra de espaço', async () => {
     await mountScanning()
     expect(highlight()).toBe('acoes-frase')
-    // O foco real acompanha o destaque
     expect((document.activeElement as HTMLElement).dataset.scanGroup).toBe('acoes-frase')
 
-    // "eu": a categoria Pessoas já está aberta
     await waitFor('linha-1')
     await press(' ')
     await waitFor('card:eu')
     await press(' ')
 
-    // "quero": Categorias → Ações → linha 1
     await waitFor('categorias')
     await press(' ')
     await waitFor('aba:acoes')
@@ -314,7 +303,6 @@ describe('BoardView com varredura', () => {
     await waitFor('card:quero')
     await press(' ')
 
-    // "água": Categorias → Comida e bebida → linha 1
     await waitFor('categorias')
     await press(' ')
     await waitFor('aba:comida-e-bebida')
@@ -324,7 +312,6 @@ describe('BoardView com varredura', () => {
     await waitFor('card:agua')
     await press(' ')
 
-    // Falar
     await waitFor('acoes-frase')
     await press(' ')
     await waitFor('falar')
@@ -346,7 +333,6 @@ describe('BoardView com varredura', () => {
 
   it('pausa depois de 3 voltas sem seleção e mostra "Pressione para continuar"', async () => {
     await mountScanning()
-    // 6 grupos: ações da frase, frases rápidas, categorias e 3 linhas de Pessoas
     await wait(6 * 3 * INTERVAL)
     expect(highlight()).toBeNull()
     expect(wrapper.text()).toContain('Pressione para continuar')
@@ -417,15 +403,12 @@ describe('BoardView com varredura', () => {
     await press(' ')
     expect(synth.speak.mock.calls.at(-1)![0]).toMatchObject({ text: 'eu', volume: 0.5 })
 
-    // A partir daqui o sintetizador simula uma fala em andamento
     synth.speaking = true
     await press(' ')
-    // Selecionou "eu" (volume normal); o destaque seguinte não interrompe essa fala
     expect(synth.speak.mock.calls.at(-1)![0]).toMatchObject({ text: 'eu', volume: 1 })
     await wait(INTERVAL)
     expect(spokenTexts().at(-1)).toBe('eu')
 
-    // Terminou de falar: a varredura auditiva volta a anunciar
     synth.speaking = false
     await wait(INTERVAL)
     expect(spokenTexts().at(-1)).toBe('Categorias')

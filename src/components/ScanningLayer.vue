@@ -10,10 +10,6 @@ import { useSpeech } from '../composables/useSpeech'
 import { useSettingsStore } from '../stores/settingsStore'
 import HoldButton from './HoldButton.vue'
 
-// Camada fina entre a máquina de estados da varredura e o DOM. Lê os grupos e itens
-// marcados com data-scan-group / data-scan-item dentro do ancestral [data-scan-root],
-// destaca e foca o elemento atual e transforma teclado e toque em acionamentos.
-
 const settings = useSettingsStore()
 const { speak } = useSpeech()
 const layerRef = useTemplateRef<HTMLDivElement>('layer')
@@ -56,12 +52,9 @@ const scanning = useScanning({
   intervalMs: () => settings.scanning.intervalMs,
   loopsBeforePause: () => settings.scanning.loopsBeforePause,
   automatic: () => !isTwoButtons.value,
-  // Selecionar um item é o mesmo que clicar nele: reaproveita as ações dos componentes
   onSelect: (groupId, itemId) => findItem(groupId, itemId)?.click(),
 })
 const { level, highlightedId, highlightedGroupId, isPaused } = scanning
-
-// --- Destaque e foco ---
 
 let highlighted: HTMLElement | undefined
 let openGroup: HTMLElement | undefined
@@ -73,7 +66,6 @@ function clearMarks() {
   openGroup = undefined
 }
 
-// Nome falado na varredura auditiva
 function nameOf(element: HTMLElement): string {
   return (
     element.dataset.scanLabel ??
@@ -84,7 +76,6 @@ function nameOf(element: HTMLElement): string {
 }
 
 watch([highlightedId, level], async () => {
-  // Espera o "Voltar" aparecer: ele só existe no nível 2
   await nextTick()
   clearMarks()
   const id = highlightedId.value
@@ -101,17 +92,13 @@ watch([highlightedId, level], async () => {
   if (!highlighted) return
 
   highlighted.setAttribute('data-scan-highlight', level.value === 'group' ? 'grupo' : 'item')
-  // O foco real acompanha o destaque: leitor de tela e rolagem até o elemento
   highlighted.focus()
   if (settings.scanning.auditoryPreview) speak(nameOf(highlighted), { preview: true })
 })
 
-// --- Acionador ---
-
 type SwitchAction = 'advance' | 'select'
 
 function trigger(action: SwitchAction) {
-  // Com um diálogo aberto (ex.: frase em texto grande), o acionador fecha o diálogo
   const dialog = root()?.querySelector<HTMLDialogElement>('dialog[open]')
   if (dialog) {
     dialog.close()
@@ -127,8 +114,6 @@ const switches = {
   advance: createPressFilter(acceptanceMs, () => trigger('advance')),
 }
 
-// Varredura automática: Espaço, Enter e toque selecionam.
-// Dois botões: Espaço ou metade esquerda da tela avançam; Enter ou metade direita selecionam.
 function actionForKey(key: string): SwitchAction | undefined {
   if (key === 'Enter') return 'select'
   if (key === ' ') return isTwoButtons.value ? 'advance' : 'select'
@@ -146,13 +131,11 @@ function turnOff() {
 
 function onKeyDown(event: KeyboardEvent) {
   if (event.key === 'Escape') {
-    // Esc com um diálogo aberto só fecha o diálogo (comportamento nativo)
     if (!root()?.querySelector('dialog[open]')) turnOff()
     return
   }
   const action = actionForKey(event.key)
   if (!action) return
-  // Impede que o navegador acione o botão focado: quem decide é a varredura
   event.preventDefault()
   event.stopPropagation()
   if (!event.repeat) switches[action].down()
@@ -180,12 +163,10 @@ function onPointerUp() {
   pointerAction = undefined
 }
 
-// Toque rápido no botão de desligar conta como acionamento normal
 function onOffRelease(heldMs: number, clientX: number | null) {
   if (heldMs >= settings.scanning.acceptanceMs) trigger(actionForPoint(clientX))
 }
 
-// Trocar de modo recomeça a varredura
 watch(isTwoButtons, () => {
   scanning.stop()
   scanning.start()
@@ -209,7 +190,6 @@ onBeforeUnmount(() => {
 
 <template>
   <div ref="layer">
-    <!-- Camada transparente: com a varredura ligada, a tela inteira vira o acionador -->
     <div
       class="scan-overlay"
       :class="{ 'scan-overlay--split': isTwoButtons }"
@@ -231,7 +211,6 @@ onBeforeUnmount(() => {
       </p>
     </div>
 
-    <!-- Barra inferior: também é acionador, exceto o botão de desligar -->
     <div
       class="scan-bar"
       @pointerdown="onPointerDown"
@@ -269,7 +248,6 @@ onBeforeUnmount(() => {
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Modo dois botões: linha dividindo a tela ao meio */
 .scan-overlay--split {
   background: linear-gradient(
     to right,

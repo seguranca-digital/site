@@ -1,4 +1,3 @@
-// IndexedDB falso (em memória) no lugar do real, que o jsdom não tem
 import 'fake-indexeddb/auto'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { createPinia, setActivePinia } from 'pinia'

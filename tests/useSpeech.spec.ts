@@ -1,9 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-// Testes do useSpeech com a Web Speech API simulada (o jsdom não tem speechSynthesis).
-// O módulo guarda estado (suporte detectado ao carregar, lista de vozes), então cada
-// teste recarrega o módulo com um speechSynthesis falso novo.
-
 class FakeUtterance {
   lang = ''
   voice: SpeechSynthesisVoice | null = null
@@ -37,12 +33,10 @@ function createFakeSynth(initialVoices: SpeechSynthesisVoice[] = []) {
     addEventListener: vi.fn((type: string, listener: () => void) => {
       ;(listeners[type] ??= []).push(listener)
     }),
-    // Simula o navegador terminando de carregar as vozes
     loadVoices(list: SpeechSynthesisVoice[]) {
       voices = list
       listeners.voiceschanged?.forEach((listener) => listener())
     },
-    // Simula o fim da fala atual
     finish(utterance: FakeUtterance) {
       synth.speaking = false
       utterance.onend?.()
@@ -87,7 +81,6 @@ describe('useSpeech (speechSynthesis simulado)', () => {
 
   it('carrega as vozes que chegam depois pelo evento voiceschanged', async () => {
     const { speech } = await loadSpeech(synth)
-    // No primeiro acesso getVoices() vem vazio
     expect(speech.voices.value).toEqual([])
 
     synth.loadVoices([en, ptBRLocal])
@@ -180,7 +173,6 @@ describe('useSpeech (speechSynthesis simulado)', () => {
     speech.speak('Pessoas', { preview: true })
     expect(spoken(synth)[0].volume).toBe(0.5)
 
-    // Uma frase começa; a prévia seguinte espera ela terminar
     speech.speak('eu quero água')
     speech.speak('Ações', { preview: true })
     expect(spoken(synth).map((utterance) => utterance.text)).toEqual(['Pessoas', 'eu quero água'])
